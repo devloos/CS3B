@@ -37,6 +37,37 @@
 
   szEggTest:  .asciz "egg"
   szSpaceTest:  .asciz " "
+  chLF:			.byte		0xa
+  s1:			.asciz		"Cat in the hat."
+  s2:			.asciz		"Green eggs and ham."
+  s3:			.asciz		"cat in the hat."
+  szStartsWith1:		.asciz		"hat."
+  szStartsWith2:		.asciz		"Cat"
+  szEndsWith:		.asciz		"in the hat."
+  szEndsWithMsg:		.asciz		"String_endsWith(s1, in the hat.) = "
+  ptrS4:			.quad		0
+  ptrSubstring1:		.quad		0
+  ptrSubstring2:		.quad		0
+  szPromptForS1Length:	.asciz		"s1.length() = "
+  szPromptForS2Length:	.asciz		"s2.length() = "
+  szPromptForS3Length:	.asciz		"s3.length() = "
+  szAnswerForS1Length:	.space		BUFFER
+  szAnswerForS2Length:	.space		BUFFER
+  szAnswerForS3Length:	.space		BUFFER
+  szPromptForEqual1:	.asciz		"String_equals(s1,s3) = "
+  szPromptForEqual2:	.asciz		"String_equals(s1, s1) = "
+  szPromptForIgnoreEqual1:.asciz		"String_equalsIgnoreCase(s1, s3) = "
+  szPromptForIgnoreEqual2:.asciz		"String_equalsIgnoreCase(s1, s2) = "
+  szAnswerForEqualTrue: 	.asciz		"TRUE "
+  szAnswerForEqualFalse:	.asciz		"FALSE "
+  szStringCopyMsg1:	.asciz		"s4 = String_copy(s1)"
+  szStringCopyMsg2:	.asciz		"s1 = "
+  szStringCopyMsg3:	.asciz		"s4 = "
+  szSubstring1Msg1:	.asciz		"String_substring_1(s3,4,14) = "
+  szSubstring2Msg1:	.asciz		"String_substring_2(s3,7) = "
+  szCharAtMsg1:		.asciz		"String_charAt(s2, 4) = "
+  szStartsWith1Msg:	.asciz		"String_startsWith_1(s1, 11, hat.) = "
+  szStartWith2Msg:	.asciz		"String_startsWith_2(s1, Cat) = "
 
   chCr: .byte 10
 
@@ -59,6 +90,371 @@ convert_and_print_number:
   RET
 
 _start:
+
+// THIS IS FOR THE S1 LENGTH FUNCTION
+
+	ldr x0,=szPromptForS1Length				// This Loads the Address of the Length Prompt for S1
+	bl  putstring						// Displays the "s1.length() = " to the Screen
+	
+	ldr x0,=s1						// This Loads the Address of S1
+	bl  String_length					// This function will length of the string in x0
+	
+	ldr x1,=szAnswerForS1Length				// This Loads the Address of szAnswerForS1Length into x1 for int64asc
+	bl  int64asc						// This calls int64asc which converts the integer in x0 to ascii
+
+	ldr x0,=szAnswerForS1Length				// This Loads the Address of szAnswerForS1Length into x0 to Print
+	bl  putstring						// This Prints the Answer for the S1 Length to the Screen
+
+
+	//LINE FEED 
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+
+
+	// THIS IS FOR S2 LENGTH FUNCTION
+
+	ldr x0,=szPromptForS2Length				// This Loads the Address of the Length Prompt for S2
+	bl  putstring						// Displays the "s2.length() = " to the Screen
+	
+	ldr x0,=s2						// This Loads the Address of S2
+	bl  String_length					// This function will length of the string in x0
+	
+	ldr x1,=szAnswerForS2Length				// This Loads the Address of szAnswerForS2Length into x1 for int64asc
+	bl  int64asc						// This calls int64asc which converts the integer in x0 to ascii
+
+	ldr x0,=szAnswerForS2Length				// This Loads the Address of szAnswerForS2Length into x0 to Print
+	bl  putstring						// This Prints the Answer for the S2 Length to the Screen
+
+	
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+
+
+	// THIS IS FOR S3 LENGTH FUNCTION
+
+
+	ldr x0,=szPromptForS3Length				// This Loads the Address of the Length Prompt for S3
+	bl  putstring						// Displays the "s3.length() = " to the Screen
+	
+	ldr x0,=s3						// This Loads the Address of S3
+	bl  String_length					// This function will length of the string in x0
+	
+	ldr x1,=szAnswerForS3Length				// This Loads the Address of szAnswerForS3Length into x1 for int64asc
+	bl  int64asc						// This calls int64asc which converts the integer in x0 to ascii
+
+	ldr x0,=szAnswerForS3Length				// This Loads the Address of szAnswerForS3Length into x0 to Print
+	bl  putstring						// This Prints the Answer for the S3 Length to the Screen
+
+
+
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+
+	// THIS IS FOR EQUALS FUNCTION Part 1
+
+	ldr x0,=szPromptForEqual1				// Loads the Address of szPromptForEqual1 into x0
+	bl  putstring						// Displays "String_equals(s1,s3) = " to the Screen
+
+
+	ldr x0,=s1						// 1st Argument -- Loads s1 into x0
+	ldr x1,=s3						// 2nd Argument -- Loads s2 into x1
+
+	bl String_equals					// Branches to String_equals 
+	
+	// Display True or False
+	cmp x0, #0						// If x0 - 0 = True then Display False
+	b.eq string_equals_false_1				// if x0 = 0 then branch to false
+	cmp x0, #1						// if x0 = 1 then display true
+	b.eq string_equals_true_1				// if x0 = 1 then branch to true
+	string_equals_false_1:
+		ldr x0,=szAnswerForEqualFalse			// Loads the Address of szAnswerForEqualFalse into x0
+		bl  putstring					// Display this to the screen
+		b   endOfStringEqualsPart1			// Branch to the endOfStringEqualsPart1
+	string_equals_true_1:	
+		ldr x0,=szAnswerForEqualTrue			// Loads the Address of szAnswerForEqualTrue into x0
+		bl  putstring					// Displays this to the screen
+
+endOfStringEqualsPart1:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+	
+
+	// THIS IS FOR EQUALS FUNCTION Part 2
+	ldr x0,=szPromptForEqual2				// Loads the Address of szPromptForEqual2 into x0
+	bl  putstring						// Displays "String_equals(s1,s1) = " to the Screen
+
+
+	ldr x0,=s1						// 1st Argument -- Loads s1 into x0
+	ldr x1,=s1						// 2nd Argument -- Loads s1 into x1
+
+	bl String_equals					// Branches to String_equals 
+	
+	// Display True or False
+	cmp x0, #0						// If x0 - 0 = True then Display False
+	b.eq string_equals_false_2				// if x0 = 0 then branch to false
+	cmp x0, #1						// if x0 = 1 then display true
+	b.eq string_equals_true_2				// if x0 = 1 then branch to true
+	string_equals_false_2:
+		ldr x0,=szAnswerForEqualFalse			// Loads the Address of szAnswerForEqualFalse into x0
+		bl  putstring					// Display this to the screen
+		b   endOfStringEqualsPart2			// Branch to the endOfStringEqualsPart1
+	string_equals_true_2:	
+		ldr x0,=szAnswerForEqualTrue			// Loads the Address of szAnswerForEqualTrue into x0
+		bl  putstring					// Displays this to the screen
+
+endOfStringEqualsPart2:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+	
+	// THIS IS STRING_EQUALSIGNORE PART 1
+
+	ldr x0,=szPromptForIgnoreEqual1				// This Loads the Address of szPromptForIgnoreEqual1 into x0
+	bl  putstring						// Displays it to the screen "String_equals(s1,s3) = "
+
+
+
+	ldr x0,=s1						// 1st Argument -- Loads s1 into x0
+	ldr x1,=s3						// 2nd Argument -- Loads s3 into x0
+
+	bl  String_equalsIgnoreCase				// Call the function String_equalsIgnoreCase which compares the two string disregarding the Case
+	// Display True or False
+	cmp x0, #0						// x0 = 0 then False
+	b.eq string_equals_ignoreCase_false_part1		// if false go to string_equals_ignoreCase_false_part1
+	cmp x0, #1						// if x0 = 1 then True
+	b.eq string_equals_ignoreCase_true_part1		// if true go to string_equals_ignoreCase_true_part1
+	
+	string_equals_ignoreCase_false_part1:
+		ldr x0,=szAnswerForEqualFalse			// load into x0 the address of szAnswerForEqualFalse
+		bl  putstring					// Display False to the Screen
+		b endOfStringEqualsIgnoreCasePart1		// then Jump to the end of part 1 of this case
+	string_equals_ignoreCase_true_part1:
+		ldr x0,=szAnswerForEqualTrue			//loads into x0 the address of szAnswerForEqualTrue
+		bl  putstring					// Display True to the screen
+
+endOfStringEqualsIgnoreCasePart1:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+	
+
+	// THIS IS STRING_EQUALSIGNORE PART 2
+
+	ldr x0,=szPromptForIgnoreEqual2				// This Loads the Address of szPromptForIgnoreEqual2 into x0
+	bl  putstring						// Displays it to the screen "String_equals(s1,s2) = "
+
+
+
+	ldr x0,=s1						// 1st Argument -- Loads s1 into x0
+	ldr x1,=s2						// 2nd Argument -- Loads s2 into x0
+
+	bl  String_equalsIgnoreCase				// Call the function String_equalsIgnoreCase which compares the two string disregarding the Case
+	// Display True or False
+	cmp x0, #0						// x0 = 0 then False
+	b.eq string_equals_ignoreCase_false_part2		// if false go to string_equals_ignoreCase_false_part2
+	cmp x0, #1						// if x0 = 1 then True
+	b.eq string_equals_ignoreCase_true_part2		// if true go to string_equals_ignoreCase_true_part2
+	
+	string_equals_ignoreCase_false_part2:
+		ldr x0,=szAnswerForEqualFalse			// load into x0 the address of szAnswerForEqualFalse
+		bl  putstring					// Display False to the Screen
+		b endOfStringEqualsIgnoreCasePart2		// then Jump to the end of part 1 of this case
+	string_equals_ignoreCase_true_part2:
+		ldr x0,=szAnswerForEqualTrue			//loads into x0 the address of szAnswerForEqualTrue
+		bl  putstring					// Display True to the screen
+
+endOfStringEqualsIgnoreCasePart2:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+
+	// THIS PART IS FOR STRING COPY FUNCTION (LEAVE OFF HERE)
+	
+	ldr x0,=szStringCopyMsg1				// Loads the Address of szStringCopyMsg1 into x0
+	bl  putstring						// Displays the Prompt to the Screen
+
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+	ldr x0,=szStringCopyMsg2					// Loads the Address of szStringCopyMsg2 into x0
+	bl  putstring						// Display the prompt to the screen
+	ldr x0,=s1						// Loads the Address of s1 into x0
+	bl  putstring						// Display s1 to the screen
+
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+		
+	ldr x0,=s1						// Loads the Address of s1 into x0	
+	ldr x1,=ptrS4						// Loads the Address of s4 into x1
+	bl String_copy						// branch and link to String_copy
+
+
+	ldr x0,=szStringCopyMsg3				// Loads the Address of szStringCopyMsg3 into x0
+	bl  putstring						// Displays that prompt to the screen
+
+	ldr x0,=ptrS4						// Load into x0 the memory address of ptrS4
+	ldr x0,[x0]						// Load into x0 the contents of ptrS4 which is a memory address
+	bl  putstring						// Display that memory address which is a string
+	
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+	
+	// THIS PART IS FOR String_substring_1 (LEAVE OFF HERE)
+	
+	ldr x0,=szSubstring1Msg1				// This Loads the Address of szSubstring1Msg1 into x0
+	bl  putstring						// Display the the prompt to the screen
+	
+	ldr x0,=s3						// This Loads the Address of s3 into x0 (Argument 1)
+	mov x1,#4						// Loads into x1 the Begin Index	(Argument 2)
+	mov x2, #14						// Loads into x2 the End Index		(Argument 3)
+	bl String_substring_1					// Branch and link to String_substring_1
+	
+	ldr x1,=ptrSubstring1					// load into x1 the address of ptrSubstring1
+	str x0, [x1]						// store the memory address of the dynamically created string into ptrSubstring1
+
+	ldr x0,=ptrSubstring1					// load into x0 the address of ptrSubstring1
+	ldr x0, [x0]						// load the contents of ptrSubstring1 into x0 
+	bl  putstring						// Display that string to the screen
+
+
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+	// THIS PART IS FOR String_substring_2 (LEAVE OFF HERE)
+	
+	ldr x0,=szSubstring2Msg1				// This loads the address of szSubstring2Msg1 into x0
+	bl  putstring						// Display this prompt to the screen
+
+	ldr x0,=s3						// (Argument) loads the address of s3 into x0
+	mov x1, #7						// (Argument) moves the begin index into x1	
+	bl String_substring_2
+
+
+	ldr x1,=ptrSubstring2
+	str x0, [x1]
+	ldr x0,=ptrSubstring2
+	ldr x0, [x0]
+	bl putstring
+
+
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+	// THIS PART OF CHARAT
+	ldr x0,=szCharAtMsg1					// This loads the szCharAtMsg1 into x0
+	bl putstring						// Displays this to the screen
+	ldr x0,=s2						// This Loads the Address of s2 into x0 (ARGUMENT)
+	mov x1, #4						// This Loads 4 into x1 which is the index of the char (Argument)
+	bl  String_charAt					// Branch and Link to String_charAt
+	bl putch 						// display that string to the screen
+
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+	// ThIS PART OF startsWith1
+	ldr x0,=szStartsWith1Msg				// load the address of szStartWith1Msg into x0
+	bl  putstring						// display the prompt to the screen 
+
+	ldr x0,=s1						// This Loads the Address of s1 into x0 (Argument)
+	mov x1, #11						// This Loads into x1 the offset of 11  (Argument)
+	ldr x2,=szStartsWith1					// Loads the String Prefix we are going to compare too (Argument)
+	bl String_startsWith_1					// Branches and Links to String_startsWith_1
+	// Display True or False
+	cmp x0, #0						// If x0 - 0 = True then Display False
+	b.eq string_startsWith_false_1				// if x0 = 0 then branch to false
+	cmp x0, #1						// if x0 = 1 then display true
+	b.eq string_startsWith_true_1				// if x0 = 1 then branch to true
+	string_startsWith_false_1:
+		ldr x0,=szAnswerForEqualFalse			// Loads the Address of szAnswerForEqualFalse into x0
+		bl  putstring					// Display this to the screen
+		b   endOfStringStartsWithPart1			// Branch to the endOfStringStartsWithPart1
+	string_startsWith_true_1:	
+		ldr x0,=szAnswerForEqualTrue			// Loads the Address of szAnswerForEqualTrue into x0
+		bl  putstring					// Displays this to the screen
+
+
+endOfStringStartsWithPart1:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+	
+
+	// THIS IS PART OF STARTS WITH 2
+	
+	ldr x0,=szStartWith2Msg					// This Loads the Address of szStartWith2Msg
+	bl  putstring						// Display the Prompt to the Screen
+	
+
+
+	ldr x0,=s1						// (Argument) sThis Loads the Address of s1 into x0
+	ldr x1,=szStartsWith2					// (Argument) This loads szStartWith2 into x1
+	bl  String_startsWith_2					//  Branch and Link into String_startsWith_2
+	// Display True or False
+	cmp x0, #0						// If x0 - 0 = True then Display False
+	b.eq string_startsWith_false_2				// if x0 = 0 then branch to false
+	cmp x0, #1						// if x0 = 1 then display true
+	b.eq string_startsWith_true_2				// if x0 = 1 then branch to true
+	string_startsWith_false_2:
+		ldr x0,=szAnswerForEqualFalse			// Loads the Address of szAnswerForEqualFalse into x0
+		bl  putstring					// Display this to the screen
+		b   endOfStringStartsWithPart2			// Branch to the endOfStringStartsWithPart1
+	string_startsWith_true_2:	
+		ldr x0,=szAnswerForEqualTrue			// Loads the Address of szAnswerForEqualTrue into x0
+		bl  putstring					// Displays this to the screen
+
+
+
+endOfStringStartsWithPart2:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+	
+
+	// START OF ENDSWITH
+		
+	ldr x0,=szEndsWithMsg					// load the address of szEndsWithMsg into x0
+	bl  putstring						// display the prompt to the screen
+
+
+	ldr x0,=s1						// (ARGUMENT) this loads the address of s1 into x0
+	ldr x1,=szEndsWith					// (ARGUMENT) This loads the address of szEndwith suffix
+	
+	bl String_endsWith					// Branch and Link to String_endsWith
+	
+
+	// Display True or False
+	cmp x0, #0						// If x0 - 0 = True then Display False
+	b.eq string_endsWith_false_2				// if x0 = 0 then branch to false
+	cmp x0, #1						// if x0 = 1 then display true
+	b.eq string_endsWith_true_2				// if x0 = 1 then branch to true
+	string_endsWith_false_2:
+		ldr x0,=szAnswerForEqualFalse			// Loads the Address of szAnswerForEqualFalse into x0
+		bl  putstring					// Display this to the screen
+		b   endOfStringEndsWithPart2			// Branch to the endOfStringStartsWithPart1
+	string_endsWith_true_2:	
+		ldr x0,=szAnswerForEqualTrue			// Loads the Address of szAnswerForEqualTrue into x0
+		bl  putstring					// Displays this to the screen
+
+endOfStringEndsWithPart2:
+	//LINE FEED
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch
+
+
+
   // ----------------------- TEST #13 --------------------------- //
   LDR X0, =szStringIndexOf1   // load the address of szStringIndexOf1 into X0
   BL putstring
