@@ -11,7 +11,7 @@
 // set global start as the main entry
   .global _start
 
-  .equ BUFFER, 512
+  .equ BUFFER, 21
 
   .section .data
 
@@ -37,11 +37,12 @@
 
   szEggTest:  .asciz "egg"
   szSpaceTest:  .asciz " "
-  chLF:			.byte		0xa
-  s1:			.asciz		"Cat in the hat."
-  s2:			.asciz		"Green eggs and ham."
-  s3:			.asciz		"cat in the hat."
-  szStartsWith1:		.asciz		"hat."
+
+  chLF:	  .byte		0xa
+  s1:	    .asciz		"Cat in the hat."
+  s2:	    .asciz		"Green eggs and ham."
+  s3:	    .asciz		"cat in the hat."
+  szStartsWith1:  .asciz  "jldklajdfklj"
   szStartsWith2:		.asciz		"Cat"
   szEndsWith:		.asciz		"in the hat."
   szEndsWithMsg:		.asciz		"String_endsWith(s1, in the hat.) = "
@@ -51,9 +52,9 @@
   szPromptForS1Length:	.asciz		"s1.length() = "
   szPromptForS2Length:	.asciz		"s2.length() = "
   szPromptForS3Length:	.asciz		"s3.length() = "
-  szAnswerForS1Length:	.space		BUFFER
-  szAnswerForS2Length:	.space		BUFFER
-  szAnswerForS3Length:	.space		BUFFER
+  szAnswerForS1Length:	.skip		BUFFER
+  szAnswerForS2Length:	.skip		BUFFER
+  szAnswerForS3Length:	.skip		BUFFER
   szPromptForEqual1:	.asciz		"String_equals(s1,s3) = "
   szPromptForEqual2:	.asciz		"String_equals(s1, s1) = "
   szPromptForIgnoreEqual1:.asciz		"String_equalsIgnoreCase(s1, s3) = "

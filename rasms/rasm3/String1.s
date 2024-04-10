@@ -164,11 +164,15 @@ String_substring_1:
 String_substring_2:
 	mov x19, x0					// mov x0 into x19
 	mov x20, x1					// mov x1 into x20	
+
 	str x30, [SP, #-16]!				// Store the link register onto the stack
 	str x19, [SP, #-16]!				// Store x19 onto the stack
 	str x20, [SP, #-16]!				// Store x20 onto the stack
+
+	MOV X0, X0
 	bl String_length				// call string length which has the length of the string in x0
 	sub x0, x0, x20					// x0 = (length of the string - begin index)
+	add x0, x0, #1					// x0 = (length of the string - begin index)
 	bl  malloc					// reserve that many bytes on the heap
 	mov x7, x0					// move malloc address in x7
 	ldr x20, [SP], #16				// pop x20 off the stack and load it back into x20 which holds the begin index 
@@ -176,8 +180,9 @@ String_substring_2:
 		
 	mov x0, x19					// move x19 into x0
 	bl String_length				// branch and link to string length which has the length of the string in x0
-	add x3, x0,x19		
+	add x3, x0,x19		 // x3 = 22 and x7 stores address with 9 bytes
 	sub x3, x3, #1		
+
 	ldrb w6, [x3]				// loads the last characther in the string in w5
 	add x19, x19, x20				// loads the begin index charactehr	
 	String_substring_2_loop:
