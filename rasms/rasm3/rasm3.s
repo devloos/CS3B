@@ -5,11 +5,17 @@
 // Lab: RASM3
 // Date: March 30, 2024 at 9:04 PM
 // Purpose:
-//    DO SOMETHING LOL
+//    You will work on this assignment in teams of 2. You can decide which methods you will write and which methods your
+//    partner will write. One of you will put your methods into String1.s and the other will put his/her methods into String2.s I
+//    have given you the UML for each and an explanation of what the file does. Understand that at any time the “type” is
+//    String, it will mean that the address of that string gets passed. I will use both of following formats – just out of habit. In
+//    some of the methods you will need dynamic memory allocation method which we have to research how to do in class.
+//    All of your methods will be in an external file (String1.o or String2.o) which will be linked to your proj3.obj file, they will
+//    all need to be declared “externally”.
 //*****************************************************************************
 
 // set global start as the main entry
-  .global _main
+  .global _start
 
   .equ BUFFER, 512
 
@@ -94,7 +100,7 @@ convert_and_print_number:
 
   RET
 
-_main:
+_start:
 
 //Load program information
 
@@ -134,11 +140,6 @@ _main:
 	//LINE FEED 
 	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
 	bl  putch			// This Displays the Line Feed to the Screen
-
-
-
-
-
 
 // Get User Input:
 
@@ -534,8 +535,6 @@ endOfStringEndsWithPart2:
 	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
 	bl  putch
 
-
-
   // ----------------------- TEST #13 --------------------------- //
   LDR X0, =szStringIndexOf1   					// load the address of szStringIndexOf1 into X0
   BL putstring
@@ -613,6 +612,8 @@ endOfStringEndsWithPart2:
   MOV X2, #111              					// load the address of szEggTest into X0
   BL String_replace
 
+	MOV X19, X0  // store the replaced string
+
   MOV X0, X0  							// set param for putstring
   BL putstring 
 
@@ -623,7 +624,7 @@ endOfStringEndsWithPart2:
   LDR X0, =szStringToLower   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =s1         						// load the address of szTest2 into X0
+	MOV X0, X19  // store the replaced string
   BL String_toLowerCase 
 
   MOV X0, X0  							// set param for putstring
@@ -636,8 +637,10 @@ endOfStringEndsWithPart2:
   LDR X0, =szStringToUpper   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =s1         						// load the address of szTest2 into X0
+	MOV X0, X19  // store the replaced string
   BL String_toUpperCase 
+
+	MOV X19, X0  // store the replaced string
 
   MOV X0, X0  							// set param for putstring
   BL putstring 
@@ -655,7 +658,7 @@ endOfStringEndsWithPart2:
   LDR X0, =szStringConcat   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
 		
-  LDR X0, =s1      						// load the address of szTest2 into X0
+	MOV X0, X19  // store the replaced string
   LDR X1, =szSpaceTest         					// load the address of szTest2 into X0
   BL String_concat 
 
