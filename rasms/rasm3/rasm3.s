@@ -110,127 +110,115 @@ _start:
 
 	//LINE FEED 
 	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
-	bl  putch			// This Displays the Line Feed to the Screen
+	bl  putch			    // This Displays the Line Feed to the Screen
 	
 	ldr x0,=szClass			// Loads the Address of szClass into x0
-	bl  putstring			// Displays this to the screen
+	bl  putstring			 // Displays this to the screen
 
 	//LINE FEED 
 	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
-	bl  putch			// This Displays the Line Feed to the Screen	
+	bl  putch			    // This Displays the Line Feed to the Screen	
 
 	
 	ldr x0,=szProject		// This loads the address of szProject into x0
-	bl  putstring			// This Displays it to the screen
+	bl  putstring			  // This Displays it to the screen
 
 	
 	//LINE FEED 
 	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
-	bl  putch			// This Displays the Line Feed to the Screen
+	bl  putch			    // This Displays the Line Feed to the Screen
 
 
 	ldr x0,=szDate			// Thie loads the address of szDate into x0
-	bl  putstring			// This displays it to the class
+	bl  putstring			  // This displays it to the class
 
 
 	//LINE FEED 
 	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
-	bl  putch			// This Displays the Line Feed to the Screen
+	bl  putch			    // This Displays the Line Feed to the Screen
 
 	//LINE FEED 
 	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
-	bl  putch			// This Displays the Line Feed to the Screen
+	bl  putch			    // This Displays the Line Feed to the Screen
 
 // Get User Input:
 
 	ldr x0,=szEnterS1		// Loads the address of szEnterS1 into x0
-	bl  putstring			// Displays the prompt to the screen
+	bl  putstring			  // Displays the prompt to the screen
 
-	ldr x0,=s1			// loads teh address of s1 into x0 
+	ldr x0,=s1			    // loads teh address of s1 into x0 
 	mov x1, #BUFFER			// Moves the Buffer Size into x1
-	bl getstring			// Allows the user to enter the value
+	bl getstring			  // Allows the user to enter the value
 
 	ldr x0,=szEnterS2		// Loads the address of szEnterS2 into x0
-	bl  putstring			// Displays the prompt to the screen
+	bl  putstring			  // Displays the prompt to the screen
 	
-	ldr x0,=s2			// Loads the address of s2 into x0
-	mov x1, #BUFFER			// Moves the Buffer Size into x1
-	bl getstring			// Gets user input
+	ldr x0,=s2			   // Loads the address of s2 into x0
+	mov x1, #BUFFER		 // Moves the Buffer Size into x1
+	bl getstring			 // Gets user input
 
 	ldr x0,=szEnterS3		// Loads the address of szEnterS1 into x0
-	bl  putstring			// Displays the prompt to the screen
+	bl  putstring			  // Displays the prompt to the screen
 
 
-	ldr x0,=s3			// Loads the Address of s3 into x0
+	ldr x0,=s3			    // Loads the Address of s3 into x0
 	mov x1, #BUFFER			// Moves the Buffer size into x1
-	bl  getstring			// Gets the user input
+	bl  getstring			  // Gets the user input
 	
 
 	//LINE FEED 
-	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	ldr x0,=chLF			  // This Loads the Address of a Line Feed into x0
 	bl  putch						// This Displays the Line Feed to the Screen
-
-
-
 
 // THIS IS FOR THE S1 LENGTH FUNCTION
 
 	ldr x0,=szPromptForS1Length				// This Loads the Address of the Length Prompt for S1
-	bl  putstring						// Displays the "s1.length() = " to the Screen
+	bl  putstring						          // Displays the "s1.length() = " to the Screen
 	
-	ldr x0,=s1						// This Loads the Address of S1
+	ldr x0,=s1						    // This Loads the Address of S1
 	bl  String_length					// This function will length of the string in x0
 	
 	ldr x1,=szAnswerForS1Length				// This Loads the Address of szAnswerForS1Length into x1 for int64asc
-	bl  int64asc						// This calls int64asc which converts the integer in x0 to ascii
+	bl  int64asc						          // This calls int64asc which converts the integer in x0 to ascii
 
 	ldr x0,=szAnswerForS1Length				// This Loads the Address of szAnswerForS1Length into x0 to Print
-	bl  putstring						// This Prints the Answer for the S1 Length to the Screen
-
+	bl  putstring						          // This Prints the Answer for the S1 Length to the Screen
 
 	//LINE FEED 
 	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
-	bl  putch						// This Displays the Line Feed to the Screen
-
-
+	bl  putch						    // This Displays the Line Feed to the Screen
 
 	// THIS IS FOR S2 LENGTH FUNCTION
 
 	ldr x0,=szPromptForS2Length				// This Loads the Address of the Length Prompt for S2
-	bl  putstring						// Displays the "s2.length() = " to the Screen
+	bl  putstring						          // Displays the "s2.length() = " to the Screen
 	
-	ldr x0,=s2						// This Loads the Address of S2
+	ldr x0,=s2						    // This Loads the Address of S2
 	bl  String_length					// This function will length of the string in x0
 	
 	ldr x1,=szAnswerForS2Length				// This Loads the Address of szAnswerForS2Length into x1 for int64asc
-	bl  int64asc						// This calls int64asc which converts the integer in x0 to ascii
+	bl  int64asc						          // This calls int64asc which converts the integer in x0 to ascii
 
 	ldr x0,=szAnswerForS2Length				// This Loads the Address of szAnswerForS2Length into x0 to Print
-	bl  putstring						// This Prints the Answer for the S2 Length to the Screen
+	bl  putstring						          // This Prints the Answer for the S2 Length to the Screen
 
-	
 	//LINE FEED
 	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
-	bl  putch						// This Displays the Line Feed to the Screen
-
-
+	bl  putch						    // This Displays the Line Feed to the Screen
 
 	// THIS IS FOR S3 LENGTH FUNCTION
 
-
 	ldr x0,=szPromptForS3Length				// This Loads the Address of the Length Prompt for S3
-	bl  putstring						// Displays the "s3.length() = " to the Screen
+	bl  putstring						          // Displays the "s3.length() = " to the Screen
 	
-	ldr x0,=s3						// This Loads the Address of S3
+	ldr x0,=s3						    // This Loads the Address of S3
 	bl  String_length					// This function will length of the string in x0
 	
 	ldr x1,=szAnswerForS3Length				// This Loads the Address of szAnswerForS3Length into x1 for int64asc
-	bl  int64asc						// This calls int64asc which converts the integer in x0 to ascii
+	bl  int64asc						          // This calls int64asc which converts the integer in x0 to ascii
 
 	ldr x0,=szAnswerForS3Length				// This Loads the Address of szAnswerForS3Length into x0 to Print
-	bl  putstring						// This Prints the Answer for the S3 Length to the Screen
-
-
+	bl  putstring						          // This Prints the Answer for the S3 Length to the Screen
 
 	//LINE FEED
 	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
