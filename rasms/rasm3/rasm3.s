@@ -9,88 +9,168 @@
 //*****************************************************************************
 
 // set global start as the main entry
-  .global _start
+  .global _main
 
-  .equ BUFFER, 21
+  .equ BUFFER, 512
 
   .section .data
 
   szBuffer:  .skip BUFFER
 
-  szTest1: .asciz   "Cat in the hat."
-  szTest2: .asciz   "Green eggs and ham."
-  szTest3: .asciz   "cat in the hat."
+  szStudents:			.asciz		"Students: Shiv Patel Carlos Aguilera"
+  szClass:			.asciz		"Class: CS3B"
+  szProject:			.asciz		"Project: RASM3"
+  szDate:			.asciz		"4/11/2024"
 
-  szStringIndexOf1:  .asciz "String_indexOf_1(s2,'g') = "
-  szStringIndexOf2:  .asciz "String_indexOf_2(s2,'g',9) = "
-  szStringIndexOf3:  .asciz "String_indexOf_3(s2,\"eggs\") = "
+  szEnterS1:			.asciz 		"Enter the value for S1: "
+  szEnterS2:			.asciz		"Enter the value for S2: "
+  szEnterS3:			.asciz		"Enter the value for S3: "
 
-  szStringLastIndexOf1:  .asciz "String_lastIndexOf_1(s2,'g') = "
-  szStringLastIndexOf2:  .asciz "String_lastIndexOf_2(s2,'g',6) = "
-  szStringLastIndexOf3:  .asciz "String_lastIndexOf_3(s2,\"eggs\") = "
+  szStringIndexOf1:  		.asciz 		"String_indexOf_1(s2,'g') = "
+  szStringIndexOf2:  		.asciz 		"String_indexOf_2(s2,'g',9) = "
+  szStringIndexOf3:  		.asciz 		"String_indexOf_3(s2,\"eggs\") = "
 
-  szStringReplace:      .asciz "String_replace(s1,'a','o') =  "
-  szStringToLower:      .asciz "String_toLowerCase(s1) = "
-  szStringToUpper:      .asciz "String_toUpperCase(s1) = "
-  szStringConcatSpace:  .asciz "String_concat(s1, " ");"
-  szStringConcat:       .asciz "String_concat(s1, s2) = "
+  szStringLastIndexOf1:  	.asciz 		"String_lastIndexOf_1(s2,'g') = "
+  szStringLastIndexOf2:  	.asciz 		"String_lastIndexOf_2(s2,'g',6) = "
+  szStringLastIndexOf3:  	.asciz 		"String_lastIndexOf_3(s2,\"eggs\") = "
 
-  szEggTest:  .asciz "egg"
-  szSpaceTest:  .asciz " "
+  szStringReplace:      	.asciz 		"String_replace(s1,'a','o') =  "
+  szStringToLower:      	.asciz 		"String_toLowerCase(s1) = "
+  szStringToUpper:      	.asciz 		"String_toUpperCase(s1) = "
+  szStringConcatSpace:  	.asciz 		"String_concat(s1, " ");"
+  szStringConcat:       	.asciz 		"String_concat(s1, s2) = "
 
-  chLF:	  .byte		0xa
-  s1:	    .asciz		"Cat in the hat."
-  s2:	    .asciz		"Green eggs and ham."
-  s3:	    .asciz		"cat in the hat."
-  szStartsWith1:  .asciz  "jldklajdfklj"
+  szEggTest:  			.asciz 		"egg"
+  szSpaceTest:  		.asciz 		" "
+  chLF:				.byte		0xa
+  s1:				.space		BUFFER
+  s2:				.space		BUFFER
+  s3:				.space		BUFFER
+  szStartsWith1:		.asciz		"hat."
   szStartsWith2:		.asciz		"Cat"
-  szEndsWith:		.asciz		"in the hat."
+  szEndsWith:			.asciz		"in the hat."
   szEndsWithMsg:		.asciz		"String_endsWith(s1, in the hat.) = "
   ptrS4:			.quad		0
   ptrSubstring1:		.quad		0
   ptrSubstring2:		.quad		0
-  szPromptForS1Length:	.asciz		"s1.length() = "
-  szPromptForS2Length:	.asciz		"s2.length() = "
-  szPromptForS3Length:	.asciz		"s3.length() = "
-  szAnswerForS1Length:	.skip		BUFFER
-  szAnswerForS2Length:	.skip		BUFFER
-  szAnswerForS3Length:	.skip		BUFFER
-  szPromptForEqual1:	.asciz		"String_equals(s1,s3) = "
-  szPromptForEqual2:	.asciz		"String_equals(s1, s1) = "
-  szPromptForIgnoreEqual1:.asciz		"String_equalsIgnoreCase(s1, s3) = "
-  szPromptForIgnoreEqual2:.asciz		"String_equalsIgnoreCase(s1, s2) = "
+  szPromptForS1Length:		.asciz		"s1.length() = "
+  szPromptForS2Length:		.asciz		"s2.length() = "
+  szPromptForS3Length:		.asciz		"s3.length() = "
+  szAnswerForS1Length:		.space		BUFFER
+  szAnswerForS2Length:		.space		BUFFER
+  szAnswerForS3Length:		.space		BUFFER
+  szPromptForEqual1:		.asciz		"String_equals(s1,s3) = "
+  szPromptForEqual2:		.asciz		"String_equals(s1, s1) = "
+  szPromptForIgnoreEqual1:	.asciz		"String_equalsIgnoreCase(s1, s3) = "
+  szPromptForIgnoreEqual2:	.asciz		"String_equalsIgnoreCase(s1, s2) = "
   szAnswerForEqualTrue: 	.asciz		"TRUE "
   szAnswerForEqualFalse:	.asciz		"FALSE "
-  szStringCopyMsg1:	.asciz		"s4 = String_copy(s1)"
-  szStringCopyMsg2:	.asciz		"s1 = "
-  szStringCopyMsg3:	.asciz		"s4 = "
-  szSubstring1Msg1:	.asciz		"String_substring_1(s3,4,14) = "
-  szSubstring2Msg1:	.asciz		"String_substring_2(s3,7) = "
-  szCharAtMsg1:		.asciz		"String_charAt(s2, 4) = "
-  szStartsWith1Msg:	.asciz		"String_startsWith_1(s1, 11, hat.) = "
-  szStartWith2Msg:	.asciz		"String_startsWith_2(s1, Cat) = "
+  szStringCopyMsg1:		.asciz		"s4 = String_copy(s1)"
+  szStringCopyMsg2:		.asciz		"s1 = "
+  szStringCopyMsg3:		.asciz		"s4 = "
+  szSubstring1Msg1:		.asciz		"String_substring_1(s3,4,14) = "
+  szSubstring2Msg1:		.asciz		"String_substring_2(s3,7) = "
+  szCharAtMsg1:			.asciz		"String_charAt(s2, 4) = "
+  szStartsWith1Msg:		.asciz		"String_startsWith_1(s1, 11, hat.) = "
+  szStartWith2Msg:		.asciz		"String_startsWith_2(s1, Cat) = "
 
   chCr: .byte 10
 
   .section .text
 
 convert_and_print_number:
-  STR X30, [SP, #-16]! // push link register onto the stack
+  STR X30, [SP, #-16]! 			// push link register onto the stack
 
-  LDR X1, =szBuffer   // load the address of szBuffer into X0
-  BL int64asc         // branch link to int64asc
+  LDR X1, =szBuffer   			// load the address of szBuffer into X0
+  BL int64asc         			// branch link to int64asc
 
-  LDR X0, =szBuffer   // load the address of szBuffer into X0
+  LDR X0, =szBuffer   			// load the address of szBuffer into X0
   BL putstring
 
-  LDR X0, =chCr  // load the address of chCr into X0
-  BL putch       // branch link to putch and print out chCr
+  LDR X0, =chCr  			// load the address of chCr into X0
+  BL putch       			// branch link to putch and print out chCr
 
-  LDR X30, [SP], #16 // pop link register off the stack
+  LDR X30, [SP], #16 			// pop link register off the stack
 
   RET
 
-_start:
+_main:
+
+//Load program information
+
+	ldr x0,=szStudents		// Loads the Address of szStudents into x0
+	bl  putstring			// Displays this to the screen
+	
+
+	//LINE FEED 
+	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
+	bl  putch			// This Displays the Line Feed to the Screen
+	
+	ldr x0,=szClass			// Loads the Address of szClass into x0
+	bl  putstring			// Displays this to the screen
+
+	//LINE FEED 
+	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
+	bl  putch			// This Displays the Line Feed to the Screen	
+
+	
+	ldr x0,=szProject		// This loads the address of szProject into x0
+	bl  putstring			// This Displays it to the screen
+
+	
+	//LINE FEED 
+	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
+	bl  putch			// This Displays the Line Feed to the Screen
+
+
+	ldr x0,=szDate			// Thie loads the address of szDate into x0
+	bl  putstring			// This displays it to the class
+
+
+	//LINE FEED 
+	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
+	bl  putch			// This Displays the Line Feed to the Screen
+
+	//LINE FEED 
+	ldr x0,=chLF			// This Loads the Address of a Line Feed into x0
+	bl  putch			// This Displays the Line Feed to the Screen
+
+
+
+
+
+
+// Get User Input:
+
+	ldr x0,=szEnterS1		// Loads the address of szEnterS1 into x0
+	bl  putstring			// Displays the prompt to the screen
+
+	ldr x0,=s1			// loads teh address of s1 into x0 
+	mov x1, #BUFFER			// Moves the Buffer Size into x1
+	bl getstring			// Allows the user to enter the value
+
+	ldr x0,=szEnterS2		// Loads the address of szEnterS2 into x0
+	bl  putstring			// Displays the prompt to the screen
+	
+	ldr x0,=s2			// Loads the address of s2 into x0
+	mov x1, #BUFFER			// Moves the Buffer Size into x1
+	bl getstring			// Gets user input
+
+	ldr x0,=szEnterS3		// Loads the address of szEnterS1 into x0
+	bl  putstring			// Displays the prompt to the screen
+
+
+	ldr x0,=s3			// Loads the Address of s3 into x0
+	mov x1, #BUFFER			// Moves the Buffer size into x1
+	bl  getstring			// Gets the user input
+	
+
+	//LINE FEED 
+	ldr x0,=chLF						// This Loads the Address of a Line Feed into x0
+	bl  putch						// This Displays the Line Feed to the Screen
+
+
+
 
 // THIS IS FOR THE S1 LENGTH FUNCTION
 
@@ -457,141 +537,137 @@ endOfStringEndsWithPart2:
 
 
   // ----------------------- TEST #13 --------------------------- //
-  LDR X0, =szStringIndexOf1   // load the address of szStringIndexOf1 into X0
+  LDR X0, =szStringIndexOf1   					// load the address of szStringIndexOf1 into X0
   BL putstring
 
-  LDR X0, =szTest2     // load the address of szTest2 into X0
-  MOV X1, #103         // move 'g' into X1
+  LDR X0, =s2     						// load the address of szTest2 into X0
+  MOV X1, #103         						// move 'g' into X1
   BL String_indexOf_1
 
-  MOV X0, X0  // set param for convert_and_print_number
+  MOV X0, X0  							// set param for convert_and_print_number
   BL convert_and_print_number
 
   // ----------------------- TEST #14 --------------------------- //
-  LDR X0, =szStringIndexOf2   // load the address of szStringIndexOf1 into X0
+  LDR X0, =szStringIndexOf2  					 // load the address of szStringIndexOf1 into X0
   BL putstring
 
-  LDR X0, =szTest2     // load the address of szTest2 into X0
-  MOV X1, #103         // move 'g' into X1
-  MOV X2, #9           // move 9 into X2
+  LDR X0, =s2     						// load the address of szTest2 into X0
+  MOV X1, #103         						// move 'g' into X1
+  MOV X2, #9           						// move 9 into X2
   BL String_indexOf_2
 
-  MOV X0, X0  // set param for convert_and_print_number
+  MOV X0, X0  							// set param for convert_and_print_number
   BL convert_and_print_number
 
   // ----------------------- TEST #15 --------------------------- //
-  LDR X0, =szStringIndexOf3   // load the address of szStringIndexOf1 into X0
+  LDR X0, =szStringIndexOf3   					// load the address of szStringIndexOf1 into X0
   BL putstring
 
-  LDR X0, =szTest2      // load the address of szTest2 into X0
-  LDR X1, =szEggTest    // load the address of szEggTest into X0
+  LDR X0, =s2      						// load the address of szTest2 into X0
+  LDR X1, =szEggTest    					// load the address of szEggTest into X0
   BL String_indexOf_3
 
   MOV X0, X0  // set param for convert_and_print_number
   BL convert_and_print_number
 
   // ----------------------- TEST #16 --------------------------- //
-  LDR X0, =szStringLastIndexOf1   // load the address of szStringIndexOf1 into X0
+  LDR X0, =szStringLastIndexOf1   				// load the address of szStringIndexOf1 into X0
   BL putstring
 
-  LDR X0, =szTest2     // load the address of szTest2 into X0
-  MOV X1, #103         // move 'g' into X1
+  LDR X0, =s2     						// load the address of szTest2 into X0
+  MOV X1, #103         						// move 'g' into X1
   BL String_lastIndexOf_1
 
-  MOV X0, X0  // set param for convert_and_print_number
+  MOV X0, X0  							// set param for convert_and_print_number
   BL convert_and_print_number
 
   // ----------------------- TEST #17 --------------------------- //
-  LDR X0, =szStringLastIndexOf2   // load the address of szStringIndexOf1 into X0
+  LDR X0, =szStringLastIndexOf2   				// load the address of szStringIndexOf1 into X0
   BL putstring
 
-  LDR X0, =szTest2     // load the address of szTest2 into X0
-  MOV X1, #103         // move 'g' into X1
-  MOV X2, #6           // move 9 into X2
+  LDR X0, =s2     						// load the address of szTest2 into X0
+  MOV X1, #103         						// move 'g' into X1
+  MOV X2, #6           						// move 9 into X2
   BL String_lastIndexOf_2
 
-  MOV X0, X0  // set param for convert_and_print_number
+  MOV X0, X0  							// set param for convert_and_print_number
   BL convert_and_print_number
 
   // ----------------------- TEST #18 --------------------------- //
-  LDR X0, =szStringLastIndexOf3   // load the address of szStringLastIndexOf3 into X0
+  LDR X0, =szStringLastIndexOf3   				// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =szTest2         // load the address of szTest2 into X0
-  LDR X1, =szEggTest       // load the address of szEggTest into X0
+  LDR X0, =s2         						// load the address of szTest2 into X0
+  LDR X1, =szEggTest       					// load the address of szEggTest into X0
   BL String_lastIndexOf_3
 
-  MOV X0, X0  // set param for convert_and_print_number
+  MOV X0, X0  							// set param for convert_and_print_number
   BL convert_and_print_number
 
   // ----------------------- TEST #19 --------------------------- //
-  LDR X0, =szStringReplace   // load the address of szStringLastIndexOf3 into X0
+  LDR X0, =szStringReplace   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =szTest1         // load the address of szTest2 into X0
-  MOV X1, #97              // load the address of szEggTest into X0
-  MOV X2, #111              // load the address of szEggTest into X0
+  LDR X0, =s1 	        					// load the address of szTest2 into X0
+  MOV X1, #97              					// load the address of szEggTest into X0
+  MOV X2, #111              					// load the address of szEggTest into X0
   BL String_replace
 
-  MOV X19, X0  // set the returned string to x19
-
-  MOV X0, X0  // set param for putstring
+  MOV X0, X0  							// set param for putstring
   BL putstring 
 
-  LDR X0, =chCr  // load the address of chCr into X0
-  BL putch       // branch link to putch and print out chCr
+  LDR X0, =chCr  						// load the address of chCr into X0
+  BL putch       						// branch link to putch and print out chCr
 
   // ----------------------- TEST #20 --------------------------- //
-  LDR X0, =szStringToLower   // load the address of szStringLastIndexOf3 into X0
+  LDR X0, =szStringToLower   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  MOV X0, X19         // load the address of szTest2 into X0
+  LDR X0, =s1         						// load the address of szTest2 into X0
   BL String_toLowerCase 
 
-  MOV X0, X0  // set param for putstring
+  MOV X0, X0  							// set param for putstring
   BL putstring 
 
-  LDR X0, =chCr  // load the address of chCr into X0
-  BL putch       // branch link to putch and print out chCr
+  LDR X0, =chCr  						// load the address of chCr into X0
+  BL putch       						// branch link to putch and print out chCr
 
   // ----------------------- TEST #21 --------------------------- //
-  LDR X0, =szStringToUpper   // load the address of szStringLastIndexOf3 into X0
+  LDR X0, =szStringToUpper   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  MOV X0, X19         // load the address of szTest2 into X0
+  LDR X0, =s1         						// load the address of szTest2 into X0
   BL String_toUpperCase 
 
-  MOV X19, X0  // set the returned string to x19
-
-  MOV X0, X0  // set param for putstring
+  MOV X0, X0  							// set param for putstring
   BL putstring 
 
-  LDR X0, =chCr  // load the address of chCr into X0
-  BL putch       // branch link to putch and print out chCr
+  LDR X0, =chCr  						// load the address of chCr into X0
+  BL putch       						// branch link to putch and print out chCr
 
   // ----------------------- TEST #22 --------------------------- //
-  LDR X0, =szStringConcatSpace   // load the address of szStringLastIndexOf3 into X0
+  LDR X0, =szStringConcatSpace   				// load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =chCr  // load the address of chCr into X0
-  BL putch       // branch link to putch and print out chCr
+  LDR X0, =chCr  						// load the address of chCr into X0
+  BL putch       						// branch link to putch and print out chCr
 
-  LDR X0, =szStringConcat   // load the address of szStringLastIndexOf3 into X0
+  LDR X0, =szStringConcat   					// load the address of szStringLastIndexOf3 into X0
   BL putstring
-
-  MOV X0, X19         // load the address of szTest2 into X0
-  LDR X1, =szSpaceTest         // load the address of szTest2 into X0
+		
+  LDR X0, =s1      						// load the address of szTest2 into X0
+  LDR X1, =szSpaceTest         					// load the address of szTest2 into X0
   BL String_concat 
 
-  LDR X1, =szTest2  // load the address of szTest2 into X0
+  LDR X1, =s2  							// load the address of szTest2 into X0
   BL String_concat 
 
-  MOV X0, X0  // set param for putstring
+  MOV X0, X0  							// set param for putstring
   BL putstring 
 
-  LDR X0, =chCr  // load the address of chCr into X0
-  BL putch       // branch link to putch and print out chCr
+  LDR X0, =chCr  						// load the address of chCr into X0
+  BL putch       						// branch link to putch and print out chCr
 
-  MOV   X0, #0   // Use 0 return code
-  MOV   X8, #93  // Service Command Code 93 terminates this program
-  SVC   0        // Call linux to terminate the program
+  MOV   X0, #0   						// Use 0 return code
+  MOV   X8, #93  						// Service Command Code 93 terminates this program
+  SVC   0        						// Call linux to terminate the program
