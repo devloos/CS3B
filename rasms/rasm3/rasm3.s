@@ -533,6 +533,8 @@ endOfStringEndsWithPart2:
   MOV X2, #111              // load the address of szEggTest into X0
   BL String_replace
 
+  MOV X19, X0  // set the returned string to x19
+
   MOV X0, X0  // set param for putstring
   BL putstring 
 
@@ -543,7 +545,7 @@ endOfStringEndsWithPart2:
   LDR X0, =szStringToLower   // load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =szTest1         // load the address of szTest2 into X0
+  MOV X0, X19         // load the address of szTest2 into X0
   BL String_toLowerCase 
 
   MOV X0, X0  // set param for putstring
@@ -556,8 +558,10 @@ endOfStringEndsWithPart2:
   LDR X0, =szStringToUpper   // load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =szTest1         // load the address of szTest2 into X0
+  MOV X0, X19         // load the address of szTest2 into X0
   BL String_toUpperCase 
+
+  MOV X19, X0  // set the returned string to x19
 
   MOV X0, X0  // set param for putstring
   BL putstring 
@@ -575,7 +579,7 @@ endOfStringEndsWithPart2:
   LDR X0, =szStringConcat   // load the address of szStringLastIndexOf3 into X0
   BL putstring
 
-  LDR X0, =szTest1       // load the address of szTest2 into X0
+  MOV X0, X19         // load the address of szTest2 into X0
   LDR X1, =szSpaceTest         // load the address of szTest2 into X0
   BL String_concat 
 
