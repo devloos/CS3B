@@ -1,25 +1,53 @@
 // Programmer: Carlos Aguilera
-// Lab #16
+// Linked List Class
 // Purpose: 
-//     This lab is meant to help you get started with RASM-4 and linked list.
-// Author: Carlos Aguilera
-// Date Last Modified: 04/16/24
+//     Manage all our linked list needs
+// Author: Carlos Aguilera and Shiv
+// Date Last Modified: 04/20/24
 
 // set global start as the main entry
-  .global _start
+  .global get_head
+  .global get_tail
+  .global insert
+  .global foreach
 
   .data
     headPtr:  .quad  0
     tailPtr:  .quad  0
   .section .text
 
+//                NODE -> also has address
 // ------------------------------------------------------
 // |       *DATA              |         *NEXT           |
 // | 00 00 00 00 00 00 00 00  | 00 00 00 00 00 00 00 00 |
 // ------------------------------------------------------
 
-// Subroutine push:
-//      push back node into list
+// Subroutine get_head:
+//      returns head pointer in X0
+// LR: Must contain the return address
+// All AAPCS required registers are preserved,  r19-r29 and SP.
+get_head:
+  STR X30, [SP, #-16]! // push link register onto the stack
+
+  LDR X0, =headPtr    // load the address of headPtr into X0
+
+  LDR X30, [SP], #16  // pop link register off the stack
+  RET                 // return from function
+
+// Subroutine get_tail:
+//      returns tail pointer in X0
+// LR: Must contain the return address
+// All AAPCS required registers are preserved,  r19-r29 and SP.
+get_tail:
+  STR X30, [SP, #-16]! // push link register onto the stack
+
+  LDR X0, =tailPtr    // load the address of headPtr into X0
+
+  LDR X30, [SP], #16  // pop link register off the stack
+  RET                 // return from function
+
+// Subroutine inser:
+//      insert node into the back of the list
 // X0: Must contain the address of data
 // LR: Must contain the return address
 // All AAPCS required registers are preserved,  r19-r29 and SP.
