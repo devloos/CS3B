@@ -11,6 +11,21 @@
 
   .section .text
 
+count_bytes:
+  MOV X1, #0  // move 0 into X5
+  count_bytes_loop:
+    LDRB W2, [X0, X1]          // load the value at the address X4 with offset X5
+    CMP W2, 0                  // X6 - 0 and set CPSR register
+    B.EQ count_bytes_loop_end  // branch if equal to
+
+    ADD X1, X1, #1  // increment X4 by one
+    B count_bytes_loop
+  count_bytes_loop_end:
+
+  MOV X0, X1
+
+  RET  // return
+
 // String_concat helper function
 concat_string:
   LDRB W3, [X4, X2]       // load the value at the address X4 with offset X2
