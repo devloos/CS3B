@@ -8,12 +8,14 @@
 // set global start as the main entry
   .global get_head
   .global get_tail
+  .global get_size
   .global insert
   .global foreach
 
   .data
     headPtr:  .quad  0
     tailPtr:  .quad  0
+    size:     .quad  0
   .section .text
 
 //                NODE -> also has address
@@ -94,6 +96,19 @@ insert:
     LDR X19, [SP], #16  // pop X19 off the stack
     LDR X30, [SP], #16  // pop link register off the stack
     RET                 // return from function
+
+// Subroutine get_size:
+//      get size of linked list and store in X0
+// LR: Must contain the return address
+// All AAPCS required registers are preserved,  r19-r29 and SP.
+get_size:
+  STR X30, [SP, #-16]! // push link register onto the stack
+
+  LDR X0, =size    // load the address of headPtr into X0
+  LDR X0, [X0]
+
+  LDR X30, [SP], #16  // pop link register off the stack
+  RET                 // return from function
 
 // Subroutine foreach:
 //      for each every node in the linked list
