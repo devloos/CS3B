@@ -6,17 +6,16 @@
 // Purpose:
 //    DO SOMETHING LOL
 //*****************************************************************************
-
 // set global start as the main entry
 	.global String_equals
-
-  .section .text
-
+	.global ViewStrings
+	.global print_string
+    .section .text
 
 String_equals:
     str x30, [SP, #-16]!	      		// store the link register on the stack
-    mov x4, #0               	      		// Initialize index I = 0
-   				      		// Assume x0 and x1 point to the strings to compare
+    mov x4, #0               	      	// Initialize index I = 0
+   				      					// Assume x0 and x1 point to the strings to compare
 
 	String_equals_loop:
 	    ldrb w5, [x0, x4]         		// Load byte from string 1
@@ -37,3 +36,10 @@ String_equals:
 	    mov x0, #1                		// Return 0 for equal
 	    ldr x30, [SP], #16	      		// Pop the link register off the stack
 	    ret
+//--1 - View Strings---------------------------------------------------------------------------
+ViewStrings:
+  	STR X30, [SP, #-16]! 						// push link register onto the stack
+  	ADR X0,printStringWithIndexAndNewLine		// x0 has the address of a callback function called printStringWithIndexAndNewLine
+  	BL foreach									// method to loop through each item in the linkedlist
+	LDR X30, [SP], #16  						// pop link register off the stack
+	RET											// return to main menu

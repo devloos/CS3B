@@ -11,6 +11,7 @@
   .global get_size
   .global insert
   .global foreach
+  .global isEmpty
 
   .data
     headPtr:  .quad  0
@@ -49,7 +50,7 @@ get_tail:
   RET                 // return from function
 
 // Subroutine inser:
-//      insert node into the back of the list
+// insert node into the back of the list
 // X0: Must contain the address of data
 // LR: Must contain the return address
 // All AAPCS required registers are preserved,  r19-r29 and SP.
@@ -143,3 +144,22 @@ foreach:
     LDR X30, [SP], #16  // pop link register off the stack
     RET                 // return from function
 
+
+//  Subroutine for isEmpt:
+//         Returns True (1) or False (0) if the linkedlist is empty in x0
+isEmpty:
+    str x30, [SP, #-16]!        // Push the Link Register onto the Stack
+
+    ldr x0,=headPtr             // Loads the Address of headPtr into x0        
+    cmp x0, #0                  // If the HeadPtr is pointing to nothing that the list is empty
+    b.eq   trueEmptyLinkList        // Branch to emptyLinkList if the list is empty
+
+    falseEmptyLinkList:
+        mov x0, #0                  // If emptyLinkList is false then put 0 into x0 and return
+        ldr x30, [SP], #16           // Pop the Link Register Off the Stack
+        ret                         // Return
+    trueEmptyLinkList:
+        mov x0, #1                 // If true emptyLinkList then put 1 into x0 and return
+        ldr x30, [SP], #16         // Pop the Link Register off the Stack
+        ret                        // Return
+        
