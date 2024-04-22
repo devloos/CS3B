@@ -27,11 +27,18 @@
   szDate:			      .asciz		"04/20/2024"
   szUserInput:      .asciz    "Enter a choice: "
   szUserInput2:     .asciz    "Press Enter to Return: "
+  szUserInput3:     .asciz    "Enter the index to be deleted: "
   szClearScreen:    .asciz    "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
   szOption1:        .asciz    "<1> View all Stirngs"
+  szOption3:        .asciz    "<3> Delete String "
+  szOption5:        .asciz    "<5> String Search"
+  szOption7:        .asciz    "<7> Quit"
   szPrintEmpty:     .asciz     "[EMPTY]"
-  data1:            .asciz     "My anme is shiv aptel"
-  data2:            .asciz      "My name is vaishu"
+  data1:            .asciz     "test0"
+  data2:            .asciz     "test1"
+  data3:            .asciz     "test2"
+  data4:            .asciz     "test3"
+  data5:            .asciz     "test4"
   chLeftBracket:    .ascii    "["
   chRightBracket:   .ascii    "]"
   iIndex:           .word     0
@@ -112,7 +119,10 @@ _main:
   bl insert
   ldr x0,=data2
   bl insert
-
+  ldr x0,=data3
+  bl insert
+  ldr x0,=data4
+  bl insert
 
 
   // Print the Header Information  -----------------------------------------------------------------
@@ -166,13 +176,22 @@ _main:
   ldr x0,=chCr                    // Loads the Address of chCr into x0
   bl  putch                       // Display the newline characther to the console
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
+  ldr x0,=szOption3               // Loads the Address of szOption3 into x0
+  bl  putstring                   // Display the Menue Option to the Console
 
   //Line Feed
   ldr x0,=chCr                    // Loads the Address of chCr into x0
   bl  putch                       // Display the newline characther to the console
+
+  ldr x0,=szOption5               // Loads the Address of szOption5 into x0
+  bl putstring                    // Display this to the console
+
+  //Line Feed
+  ldr x0,=chCr                    // Loads the Address of chCr into x0
+  bl  putch                       // Display the newline characther to the console
+
+  ldr x0,=szOption7               // Loads the Address of szOPtion7 into x0
+  bl putstring                    // Display this to the console
 
   //Line Feed
   ldr x0,=chCr                    // Loads the Address of chCr into x0
@@ -197,7 +216,17 @@ _main:
   bl  ascint64                    // Conver the user input into a number to compare
 
   cmp x0, #1                      // Check if user entered option 1
-  b.eq Option1                // Branch and link to Option1
+  b.eq Option1                    // Branch and link to Option1
+
+  cmp x0, #3                      // Check if user entered option 3
+  b.eq Option3                    // Branch and link to Option3
+
+  cmp x0, #5                      // Check if user enetered option 5
+  b.eq Option5                    // Branch and link to option5
+
+  cmp x0, #7                      // Check if user entered option7
+  b.eq Option7                    // branch and link to option 7
+
  //------------------------------------------------------------------------------------------------ 
   
   // Preconditions - x0 must have the headPtr
@@ -247,10 +276,38 @@ _main:
                 b   Menu                      // Display the Menu again 
   //-----------------------------------------------------------------------------------------------
 
-  
+  //---Option 3 - Delete Strings-------------------------------------------------------------------
+  // Precondition: x0 contains the index of the string that is to be deleted
+  Option3:
+      //---Get Data from User Keyboard------------------------------------------------------------------
+
+      ldr x0,=szUserInput3             // Loads the Address of szUserInput into x0
+      bl  putstring                   // Display the Prompt to the Console
+
+      ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+      mov x1, BUFFER                  // Loads the Buffer amount into x1
+      bl  getstring                   // Get the String and Store 
+      ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+      bl  ascint64                    // Conver the user input into a number to compare
+
+      bl Delete                       // x0 has the index to be deleted
+
+      b Menu                          // Loop back to the Menu
+
+      //-----------------------------------------------------------------------------------------------
+
+    //---Option 5 - Search Strings-------------------------------------------------------------------
+    Option5:
 
 
 
+
+    //-----------------------------------------------------------------------------------------------
+
+
+
+//---Option 7 - Quit-------------------------------------------------------------------------
+Option7:
   MOV   X0, #0   						// Use 0 return code
   MOV   X8, #93  						// Service Command Code 93 terminates this program
   SVC   0        						// Call linux to terminate the program

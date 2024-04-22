@@ -9,6 +9,7 @@
 // set global start as the main entry
 	.global String_equals
 	.global ViewStrings
+	.global Delete
 	.global print_string
     .section .text
 
@@ -43,3 +44,12 @@ ViewStrings:
   	BL foreach									// method to loop through each item in the linkedlist
 	LDR X30, [SP], #16  						// pop link register off the stack
 	RET											// return to main menu
+//-----------------------------------------------------------------------------------------------
+
+//--3 - Delete Node ---------------------------------------------------------------------------
+Delete:
+	STR X30, [SP, #-16]! 						// push link register onto the stack
+	bl deleteNode
+	LDR X30, [SP], #16  						// pop link register off the stack
+	ret											// return
+//---------------------------------------------------------------------------------------------

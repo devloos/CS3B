@@ -12,11 +12,12 @@
   .global insert
   .global foreach
   .global isEmpty
+  .global deleteNode
 
   .data
-    headPtr:  .quad  0
-    tailPtr:  .quad  0
-    size:     .quad  0
+    headPtr:    .quad  0
+    tailPtr:    .quad  0
+    size:       .quad  0
   .section .text
 
 //                NODE -> also has address
@@ -148,18 +149,57 @@ foreach:
 //  Subroutine for isEmpt:
 //         Returns True (1) or False (0) if the linkedlist is empty in x0
 isEmpty:
-    str x30, [SP, #-16]!        // Push the Link Register onto the Stack
+    str x30, [SP, #-16]!            // Push the Link Register onto the Stack
 
-    ldr x0,=headPtr             // Loads the Address of headPtr into x0        
-    cmp x0, #0                  // If the HeadPtr is pointing to nothing that the list is empty
+    ldr x0,=headPtr                 // Loads the Address of headPtr into x0    
+    ldr x0, [x0]    
+    cmp x0, #0                      // If the HeadPtr is pointing to nothing that the list is empty
     b.eq   trueEmptyLinkList        // Branch to emptyLinkList if the list is empty
 
     falseEmptyLinkList:
         mov x0, #0                  // If emptyLinkList is false then put 0 into x0 and return
-        ldr x30, [SP], #16           // Pop the Link Register Off the Stack
+        ldr x30, [SP], #16          // Pop the Link Register Off the Stack
         ret                         // Return
     trueEmptyLinkList:
-        mov x0, #1                 // If true emptyLinkList then put 1 into x0 and return
-        ldr x30, [SP], #16         // Pop the Link Register off the Stack
-        ret                        // Return
+        mov x0, #1                  // If true emptyLinkList then put 1 into x0 and return
+        ldr x30, [SP], #16          // Pop the Link Register off the Stack
+        ret                         // Return
+
+
+// Subroutine for deleteNode:
+deleteNode:
+        str x30, [SP, #-16]!      // Push the Link Register onto the stack
+        str x19, [SP, #-16]!      // Push x19 onto the stack
+
+        mov x19, x0               // Saves a copy of the user input index
+
+        //----Check If Empty---------------------------------------------
+        bl isEmpty                // Branch and Link to isEmpty
+        cmp x0, #1                // Check if x0 equal 1 (list is empty)
+        b.eq endDeleteNode        // If true, endDeleteNode and branch to the label 
+        //---------------------------------------------------------------
+        // X5 is the counter
+        mov x5, #0
+        ldr x0,=headPtr       // Load the Address of headPtr into x0
+        deleteNodeLoop:
+            cmp x19, x5           // is the counter equal to the user index
+            b.eq  nodeFound       // Branch to this Label
+            ldr x0, [x0]          // Load the value which is an Address of headPtr
+            add x0, x0, #8        // Load the Address of the nextPtr into x0
+            add x5, x5, #1        // x5++;
+            b deleteNodeLoop      // Loop Again
         
+        //----Node Found--------------------------------------------------
+        nodeFound:
+            ldr x1, [x0]          // Load Whatever is in the nextPtr of the node into x1
+            add x1, x1, #8        // add 8 and get the nextPtr of that Node
+            ldr x2, [x1]          // Get the address of the next next Node
+            str x2, [x0]          // Set the Previous Node equal to the next next Node
+            sub x1, x1, #8        // Subtract to get the address back of the node that needs to be freed now
+            mov x0, x1            // move that address bac into x0
+            bl free               // free that memory space
+        //----------------------------------------------------------------
+        endDeleteNode:
+            ldr x19, [SP], #16        // Pop x19 off the stack
+            ldr x30, [SP], #16        // Pop the Link Register off the stack
+            ret                       // Return
