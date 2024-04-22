@@ -1,6 +1,6 @@
 CC=as
 LL=ld
-OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o
+OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o obj/String1.o
 
 all: rasm4
 
@@ -12,6 +12,9 @@ shiv-functions.o: src/functions/shiv-functions.s
 
 carlos-functions.o: src/functions/carlos-functions.s
 	$(CC) -g -o obj/carlos-functions.o src/functions/carlos-functions.s
+
+String1.o: src/utility/String1.s 
+	$(CC) -g -o obj/String1.o src/utility/String1.s
 
 linked-list.o: src/linked-list.s
 	$(CC) -g -o obj/linked-list.o src/linked-list.s

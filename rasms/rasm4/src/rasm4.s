@@ -28,17 +28,23 @@
   szUserInput:      .asciz    "Enter a choice: "
   szUserInput2:     .asciz    "Press Enter to Return: "
   szUserInput3:     .asciz    "Enter the index to be deleted: "
+  szUserInput4:     .asciz    "What are you looking for: "
   szClearScreen:    .asciz    "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
   szOption1:        .asciz    "<1> View all Stirngs"
   szOption3:        .asciz    "<3> Delete String "
   szOption5:        .asciz    "<5> String Search"
   szOption7:        .asciz    "<7> Quit"
   szPrintEmpty:     .asciz     "[EMPTY]"
-  data1:            .asciz     "test0"
-  data2:            .asciz     "test1"
-  data3:            .asciz     "test2"
-  data4:            .asciz     "test3"
-  data5:            .asciz     "test4"
+  data1:            .asciz     "The Cat in the Hat"
+  data2:            .asciz     "By Dr. Seuss"
+  data3:            .asciz     "The sun did not shine."
+  data4:            .asciz     "It was too wet to play."
+  data5:            .asciz     "So we sat in the house"
+  data6:            .asciz     "All that cold, cold, wet day."
+  data7:            .asciz      "\n"
+  data8:            .asciz      "I sat there with Sally."
+  data9:            .asciz      "We sat there, we two"
+  data10:           .asciz      "We had something to do!"
   chLeftBracket:    .ascii    "["
   chRightBracket:   .ascii    "]"
   iIndex:           .word     0
@@ -122,6 +128,18 @@ _main:
   ldr x0,=data3
   bl insert
   ldr x0,=data4
+  bl insert
+  ldr x0,=data5
+  bl insert
+  ldr x0,=data6
+  bl insert
+  ldr x0,=data7
+  bl insert
+  ldr x0,=data8
+  bl insert
+  ldr x0,=data9
+  bl insert
+  ldr x0,=data10
   bl insert
 
 
@@ -298,10 +316,16 @@ _main:
 
     //---Option 5 - Search Strings-------------------------------------------------------------------
     Option5:
+    
+    //-------Get User Input -----------------------------------------------------
+    ldr x0,=szUserInput4              // Loads the Address of szUserInput4
+    bl  putstring                     // Displays the Prompt to the Console
+    ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
+    mov x1, BUFFER                    // Loads the Buffer amount into x1
+    bl  getstring                     // Get the String and Store 
+    //=---------------------------------------------------------------------------
 
-
-
-
+    
     //-----------------------------------------------------------------------------------------------
 
 
