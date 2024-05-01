@@ -26,6 +26,7 @@
     szUserInput2:     .asciz    "Press Enter to Return: "
     szUserInput3:     .asciz    "Enter the index to be deleted: "
     szUserInput4:     .asciz    "What are you looking for: "
+    szUserInput5:     .asciz    "Input: "
 
     szErrorInvalidOption:  .asciz "[ERROR]: Invalid option choose again.\n\n"
 
@@ -242,8 +243,8 @@ _main:
     Option2:
       BL print_option2_menu
 
-      LDR x0,=chCr                    // Loads the Address of chCr into x0
-      BL  putch                       // Display the newline characther to the console
+      LDR x0,=chCr    // Loads the Address of chCr into x0
+      BL  putch       // Display the newline characther to the console
 
       BL get_input
 
@@ -258,7 +259,23 @@ _main:
       B try_again   // Branch and link to try_again
 
       option_keyboard:
-        B Menu
+        LDR x0,=szUserInput5   // Loads the Address of szUserInput4
+        BL  putstring          // Displays the Prompt to the Console
+
+        LDR X0,=szBuffer     // Loads the Address of szBuffer into x0
+        MOV X1, BUFFER       // Loads the Buffer amount into x1
+        BL  getstring        // Get the String and Store 
+
+        LDR X0,=szBuffer     // Loads the Address of szBuffer into x0
+        BL string_copy
+
+        MOV X0, X0  // setup insert params
+        BL insert   // branch link into insert
+
+        LDR X0,=chCr  // Loads the Address of chCr into x0
+        BL  putch     // Display the newline characther to the console
+
+        B Menu  // branch to menu
 
       option_file:
         B Menu
