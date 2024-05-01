@@ -11,7 +11,11 @@
 	.global ViewStrings
 	.global Delete
 	.global print_string
-    .section .text
+
+	.data
+  	chCr: .byte 10
+
+  .section .text
 
 String_equals:
     str x30, [SP, #-16]!	      		// store the link register on the stack
@@ -39,9 +43,14 @@ String_equals:
 	    ret
 //--1 - View Strings---------------------------------------------------------------------------
 ViewStrings:
-  	STR X30, [SP, #-16]! 						// push link register onto the stack
-  	ADR X0,printStringWithIndexAndNewLine		// x0 has the address of a callback function called printStringWithIndexAndNewLine
-  	BL foreach									// method to loop through each item in the linkedlist
+	STR X30, [SP, #-16]! 						// push link register onto the stack
+
+	ADR X0,printStringWithIndexAndNewLine		// x0 has the address of a callback function called printStringWithIndexAndNewLine
+	BL foreach									// method to loop through each item in the linkedlist
+
+	ldr x0,=chCr                      // Loads the Address of chCr into x0
+	bl  putch                         // Display the newline characther to the console
+
 	LDR X30, [SP], #16  						// pop link register off the stack
 	RET											// return to main menu
 //-----------------------------------------------------------------------------------------------

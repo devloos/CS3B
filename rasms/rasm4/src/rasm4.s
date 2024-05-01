@@ -20,37 +20,43 @@
 
   .section .data
 
-  szBuffer:         .skip     BUFFER
-  szStudents:		    .asciz		"Students: Shiv Patel and Carlos Aguilera"
-  szClass:			    .asciz		"Class: CS3B"
-  szProject:		    .asciz		"Project: RASM4"
-  szDate:			      .asciz		"04/20/2024"
-  szUserInput:      .asciz    "Enter a choice: "
-  szUserInput2:     .asciz    "Press Enter to Return: "
-  szUserInput3:     .asciz    "Enter the index to be deleted: "
-  szUserInput4:     .asciz    "What are you looking for: "
-  szClearScreen:    .asciz    "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-  szOption1:        .asciz    "<1> View all Stirngs"
-  szOption3:        .asciz    "<3> Delete String "
-  szOption5:        .asciz    "<5> String Search"
-  szOption7:        .asciz    "<7> Quit"
-  szPrintEmpty:     .asciz     "[EMPTY]"
-  data1:            .asciz     "The Cat in the Hat"
-  data2:            .asciz     "By Dr. Seuss"
-  data3:            .asciz     "The sun did not shine."
-  data4:            .asciz     "It was too wet to play."
-  data5:            .asciz     "So we sat in the house"
-  data6:            .asciz     "All that cold, cold, wet day."
-  data7:            .asciz      "\n"
-  data8:            .asciz      "I sat there with Sally."
-  data9:            .asciz      "We sat there, we two"
-  data10:           .asciz      "We had something to do!"
-  chLeftBracket:    .ascii    "["
-  chRightBracket:   .ascii    "]"
-  iIndex:           .word     0
-  szIndex:          .skip     BUFFER
+    szBuffer:         .skip     BUFFER
 
-  chCr: .byte 10
+    szStudents:		    .asciz		"Students: Shiv Patel and Carlos Aguilera"
+    szClass:			    .asciz		"Class: CS3B"
+    szProject:		    .asciz		"Project: RASM4"
+    szDate:			      .asciz		"04/20/2024"
+
+    szUserInput:      .asciz    "Enter a choice: "
+    szUserInput2:     .asciz    "Press Enter to Return: "
+    szUserInput3:     .asciz    "Enter the index to be deleted: "
+    szUserInput4:     .asciz    "What are you looking for: "
+
+    szOption1:        .asciz    "<1> View all Strings."
+    szOption2:        .asciz    "<2> Add String."
+    szOption3:        .asciz    "<3> Delete String."
+    szOption4:        .asciz    "<4> Edit String."
+    szOption5:        .asciz    "<5> String Search."
+    szOption6:        .asciz    "<6> Save File."
+    szOption7:        .asciz    "<7> Quit."
+
+    szPrintEmpty:     .asciz    "[EMPTY]"
+    data1:            .asciz    "The Cat in the Hat\n"
+    data2:            .asciz    "By Dr. Seuss\n"
+    data3:            .asciz    "The sun did not shine.\n"
+    data4:            .asciz    "It was too wet to play.\n"
+    data5:            .asciz    "So we sat in the house\n"
+    data6:            .asciz    "All that cold, cold, wet day.\n"
+    data7:            .asciz    "\n"
+    data8:            .asciz    "I sat there with Sally.\n"
+    data9:            .asciz    "We sat there, we two\n"
+    data10:           .asciz    "We had something to do!\n"
+    chLeftBracket:    .ascii    "["
+    chRightBracket:   .ascii    "]"
+    iIndex:           .word     0
+    szIndex:          .skip     BUFFER
+
+    chCr: .byte 10
 
   .section .text
 
@@ -100,10 +106,6 @@ printStringWithIndexAndNewLine:
   // Print the string from the node
   mov x0, x19                           // Move the copy address back into x0
   bl putstring                          // Display the string
-
-  // Print a newline
-  ldr x0, =chCr                         // Load the address of the newline character
-  bl putch                              // Display the newline
 
   // Increment and store the index
   ldr x0, =iIndex                       // Load the address of iIndex
@@ -177,10 +179,6 @@ _main:
   ldr x0,=chCr                    // Loads the Address of chCr into x0
   bl  putch                       // Display the newline characther to the console
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
-
 
   //------------------------------------------------------------------------------------------------
 
@@ -245,6 +243,9 @@ _main:
   cmp x0, #7                      // Check if user entered option7
   b.eq Option7                    // branch and link to option 7
 
+  // if it gets here input was not a valid option
+  B invalid_option
+
  //------------------------------------------------------------------------------------------------ 
   
   // Preconditions - x0 must have the headPtr
@@ -267,7 +268,10 @@ _main:
         printEmpty:
             ldr x0,=szPrintEmpty              // Loads the Address of szPrintEmpty into x0
             bl  putstring                     // Display this to the Console
-            //Line Feed
+
+            ldr x0,=chCr                      // Loads the Address of chCr into x0
+            bl  putch                         // Display the newline characther to the console
+
             ldr x0,=chCr                      // Loads the Address of chCr into x0
             bl  putch                         // Display the newline characther to the console
           
@@ -286,8 +290,10 @@ _main:
 
 
             clearOption1:
-                ldr x0,=szClearScreen         // Loads the Address of szClearScreen into x0
-                bl  putstring                 // Display this to the console
+                //Line Feed
+                ldr x0,=chCr                    // Loads the Address of chCr into x0
+                bl  putch                       // Display the newline characther to the console
+
                 ldr x0,=iIndex                // Loads the Address of iIndex into x0
                 mov x1, #0                    // x1 = 0
                 str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
@@ -314,9 +320,9 @@ _main:
 
       //-----------------------------------------------------------------------------------------------
 
-    //---Option 5 - Search Strings-------------------------------------------------------------------
-    Option5:
-    
+  //---Option 5 - Search Strings-------------------------------------------------------------------
+  Option5:
+  
     //-------Get User Input -----------------------------------------------------
     ldr x0,=szUserInput4              // Loads the Address of szUserInput4
     bl  putstring                     // Displays the Prompt to the Console
@@ -325,9 +331,9 @@ _main:
     bl  getstring                     // Get the String and Store 
     //=---------------------------------------------------------------------------
 
-    
-    //-----------------------------------------------------------------------------------------------
-
+  
+  //-----------------------------------------------------------------------------------------------
+  invalid_option:
 
 
 //---Option 7 - Quit-------------------------------------------------------------------------

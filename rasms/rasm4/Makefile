@@ -1,6 +1,6 @@
 CC=as
 LL=ld
-OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o obj/String1.o
+OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o
 
 all: rasm4
 
