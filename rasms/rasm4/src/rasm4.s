@@ -22,23 +22,10 @@
 
     szBuffer:         .skip     BUFFER
 
-    szStudents:		    .asciz		"Students: Shiv Patel and Carlos Aguilera"
-    szClass:			    .asciz		"Class: CS3B"
-    szProject:		    .asciz		"Project: RASM4"
-    szDate:			      .asciz		"04/20/2024"
-
     szUserInput:      .asciz    "Enter a choice: "
     szUserInput2:     .asciz    "Press Enter to Return: "
     szUserInput3:     .asciz    "Enter the index to be deleted: "
     szUserInput4:     .asciz    "What are you looking for: "
-
-    szOption1:        .asciz    "<1> View all Strings."
-    szOption2:        .asciz    "<2> Add String."
-    szOption3:        .asciz    "<3> Delete String."
-    szOption4:        .asciz    "<4> Edit String."
-    szOption5:        .asciz    "<5> String Search."
-    szOption6:        .asciz    "<6> Save File."
-    szOption7:        .asciz    "<7> Quit."
 
     szPrintEmpty:     .asciz    "[EMPTY]"
     data1:            .asciz    "The Cat in the Hat\n"
@@ -120,9 +107,7 @@ printStringWithIndexAndNewLine:
 
 
 _main:
-
   // Test Information
-
   ldr x0,=data1
   bl insert
   ldr x0,=data2
@@ -144,165 +129,96 @@ _main:
   ldr x0,=data10
   bl insert
 
+  BL print_header // Print the Header Information
 
-  // Print the Header Information  -----------------------------------------------------------------
-
-  ldr x0,=szStudents               // Loads the Address of szStudents into x0
-  bl  putstring                    // Display the String to the Console
-
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
-
-  ldr x0,=szClass               // Loads the Address of szClass into x0
-  bl  putstring                    // Display the String to the Console
-
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
-
-  ldr x0,=szProject               // Loads the Address of szProject into x0
-  bl  putstring                    // Display the String to the Console
-
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
-
-  ldr x0,=szDate               // Loads the Address of szDate into x0
-  bl  putstring                    // Display the String to the Console
-
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
-
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
-
-
-  //------------------------------------------------------------------------------------------------
-
-
-  //----- Print Menu -------------------------------------------------------------------------------
   Menu:
-  ldr x0,=szOption1                 // Loads the Address of sOption1 into x0
-  bl  putstring                     // Display the Menue Option to the Console
+    BL print_menu // prints menu
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
+    //------------------------------------------------------------------------------------------------
 
-  ldr x0,=szOption3               // Loads the Address of szOption3 into x0
-  bl  putstring                   // Display the Menue Option to the Console
+    //---Get Data from User Keyboard------------------------------------------------------------------
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
+    ldr x0,=szUserInput             // Loads the Address of szUserInput into x0
+    bl  putstring                   // Display the Prompt to the Console
 
-  ldr x0,=szOption5               // Loads the Address of szOption5 into x0
-  bl putstring                    // Display this to the console
+    ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+    mov x1, BUFFER                  // Loads the Buffer amount into x1
+    bl  getstring                   // Get the String and Store 
+    ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+    bl  ascint64                    // Conver the user input into a number to compare
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
+    cmp x0, #1                      // Check if user entered option 1
+    b.eq Option1                    // Branch and link to Option1
 
-  ldr x0,=szOption7               // Loads the Address of szOPtion7 into x0
-  bl putstring                    // Display this to the console
+    cmp x0, #3                      // Check if user entered option 3
+    b.eq Option3                    // Branch and link to Option3
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
+    cmp x0, #5                      // Check if user enetered option 5
+    b.eq Option5                    // Branch and link to option5
 
+    cmp x0, #7                      // Check if user entered option7
+    b.eq exit_program               // branch and link to exit program
 
-  //Line Feed
-  ldr x0,=chCr                    // Loads the Address of chCr into x0
-  bl  putch                       // Display the newline characther to the console
+    // if it gets here input was not a valid option
+    B invalid_option
 
-  //------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------ 
+    
+    // Preconditions - x0 must have the headPtr
+    //---Option 1 - View Strings---------------------------------------------------------------------
+  Option1:
+    // Check if the LinkedList is Empty----------------------------------------------
 
-  //---Get Data from User Keyboard------------------------------------------------------------------
+    bl isEmpty                        // Returns True or False in x0 if the linked list is empty
+    cmp x0, #1                        // Compares to True
+    b.eq printEmpty                   // Branch to printEmpty label
 
-  ldr x0,=szUserInput             // Loads the Address of szUserInput into x0
-  bl  putstring                   // Display the Prompt to the Console
+    //-----Print the Strings----------------------------------------------------------
 
-  ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
-  mov x1, BUFFER                  // Loads the Buffer amount into x1
-  bl  getstring                   // Get the String and Store 
-  ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
-  bl  ascint64                    // Conver the user input into a number to compare
+    bl ViewStrings                    // Branch and Link to ViewStrings
+    b  endOption1                     // Branch to endOption1
 
-  cmp x0, #1                      // Check if user entered option 1
-  b.eq Option1                    // Branch and link to Option1
+    //-------------------------------------------------------------------------------
 
-  cmp x0, #3                      // Check if user entered option 3
-  b.eq Option3                    // Branch and link to Option3
+    // printEmpty label to print if the linkedList is Empty
+    printEmpty:
+      ldr x0,=szPrintEmpty              // Loads the Address of szPrintEmpty into x0
+      bl  putstring                     // Display this to the Console
 
-  cmp x0, #5                      // Check if user enetered option 5
-  b.eq Option5                    // Branch and link to option5
+      ldr x0,=chCr                      // Loads the Address of chCr into x0
+      bl  putch                         // Display the newline characther to the console
 
-  cmp x0, #7                      // Check if user entered option7
-  b.eq Option7                    // branch and link to option 7
-
-  // if it gets here input was not a valid option
-  B invalid_option
-
- //------------------------------------------------------------------------------------------------ 
-  
-  // Preconditions - x0 must have the headPtr
-  //---Option 1 - View Strings---------------------------------------------------------------------
- Option1:
-        // Check if the LinkedList is Empty----------------------------------------------
-
-        bl isEmpty                        // Returns True or False in x0 if the linked list is empty
-        cmp x0, #1                        // Compares to True
-        b.eq printEmpty                   // Branch to printEmpty label
-
-        //-----Print the Strings----------------------------------------------------------
-
-        bl ViewStrings                    // Branch and Link to ViewStrings
-        b  endOption1                     // Branch to endOption1
-
-        //-------------------------------------------------------------------------------
-
-        // printEmpty label to print if the linkedList is Empty
-        printEmpty:
-            ldr x0,=szPrintEmpty              // Loads the Address of szPrintEmpty into x0
-            bl  putstring                     // Display this to the Console
-
-            ldr x0,=chCr                      // Loads the Address of chCr into x0
-            bl  putch                         // Display the newline characther to the console
-
-            ldr x0,=chCr                      // Loads the Address of chCr into x0
-            bl  putch                         // Display the newline characther to the console
-          
-        endOption1:
-            ldr x0,=szUserInput2              // Loads the address of szUserInput2
-            bl  putstring                     // Displays the prompt to the Screen
-            ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
-            mov x1, BUFFER                    // Loads the Buffer amount into x1
-            bl  getstring                     // Get the String and Store 
-            
-            ldr x0,=szBuffer                  // Loads into x0 szBuffer
-            ldr x0, [x0]                      // Loads the Value of szBuffer into x0
-            cmp x0, #0                        // If it equals to 0
-            b.eq clearOption1                 // Branch to this Label
-            b endOption1                      // Get the Input Again
+      ldr x0,=chCr                      // Loads the Address of chCr into x0
+      bl  putch                         // Display the newline characther to the console
+      
+    endOption1:
+      ldr x0,=szUserInput2              // Loads the address of szUserInput2
+      bl  putstring                     // Displays the prompt to the Screen
+      ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
+      mov x1, BUFFER                    // Loads the Buffer amount into x1
+      bl  getstring                     // Get the String and Store 
+      
+      ldr x0,=szBuffer                  // Loads into x0 szBuffer
+      ldr x0, [x0]                      // Loads the Value of szBuffer into x0
+      cmp x0, #0                        // If it equals to 0
+      b.eq clearOption1                 // Branch to this Label
+      b endOption1                      // Get the Input Again
 
 
-            clearOption1:
-                //Line Feed
-                ldr x0,=chCr                    // Loads the Address of chCr into x0
-                bl  putch                       // Display the newline characther to the console
+      clearOption1:
+        //Line Feed
+        ldr x0,=chCr                    // Loads the Address of chCr into x0
+        bl  putch                       // Display the newline characther to the console
 
-                ldr x0,=iIndex                // Loads the Address of iIndex into x0
-                mov x1, #0                    // x1 = 0
-                str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
-                b   Menu                      // Display the Menu again 
-  //-----------------------------------------------------------------------------------------------
+        ldr x0,=iIndex                // Loads the Address of iIndex into x0
+        mov x1, #0                    // x1 = 0
+        str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
+        b   Menu                      // Display the Menu again 
+    //-----------------------------------------------------------------------------------------------
 
-  //---Option 3 - Delete Strings-------------------------------------------------------------------
-  // Precondition: x0 contains the index of the string that is to be deleted
-  Option3:
+    //---Option 3 - Delete Strings-------------------------------------------------------------------
+    // Precondition: x0 contains the index of the string that is to be deleted
+    Option3:
       //---Get Data from User Keyboard------------------------------------------------------------------
 
       ldr x0,=szUserInput3             // Loads the Address of szUserInput into x0
@@ -320,24 +236,24 @@ _main:
 
       //-----------------------------------------------------------------------------------------------
 
-  //---Option 5 - Search Strings-------------------------------------------------------------------
-  Option5:
-  
-    //-------Get User Input -----------------------------------------------------
-    ldr x0,=szUserInput4              // Loads the Address of szUserInput4
-    bl  putstring                     // Displays the Prompt to the Console
-    ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
-    mov x1, BUFFER                    // Loads the Buffer amount into x1
-    bl  getstring                     // Get the String and Store 
-    //=---------------------------------------------------------------------------
+    //---Option 5 - Search Strings-------------------------------------------------------------------
+    Option5:
+    
+      //-------Get User Input -----------------------------------------------------
+      ldr x0,=szUserInput4              // Loads the Address of szUserInput4
+      bl  putstring                     // Displays the Prompt to the Console
+      ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
+      mov x1, BUFFER                    // Loads the Buffer amount into x1
+      bl  getstring                     // Get the String and Store 
 
-  
-  //-----------------------------------------------------------------------------------------------
-  invalid_option:
+      b Menu                          // Loop back to the Menu
+      //=---------------------------------------------------------------------------
 
+    
+    //-----------------------------------------------------------------------------------------------
+    invalid_option:
 
-//---Option 7 - Quit-------------------------------------------------------------------------
-Option7:
-  MOV   X0, #0   						// Use 0 return code
-  MOV   X8, #93  						// Service Command Code 93 terminates this program
-  SVC   0        						// Call linux to terminate the program
+  exit_program:
+    MOV   X0, #0   						// Use 0 return code
+    MOV   X8, #93  						// Service Command Code 93 terminates this program
+    SVC   0        						// Call linux to terminate the program
