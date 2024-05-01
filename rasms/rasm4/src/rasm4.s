@@ -27,6 +27,8 @@
     szUserInput3:     .asciz    "Enter the index to be deleted: "
     szUserInput4:     .asciz    "What are you looking for: "
 
+    szErrorInvalidOption:  .asciz "[ERROR]: Invalid option choose again.\n\n"
+
     szPrintEmpty:     .asciz    "[EMPTY]"
     data1:            .asciz    "The Cat in the Hat\n"
     data2:            .asciz    "By Dr. Seuss\n"
@@ -105,6 +107,27 @@ printStringWithIndexAndNewLine:
   RET                                   // Return from the functionn
 //---------------------------------------------------------------------------------------------------------
 
+// Subroutine get_input:
+//      return input from user in X0 (this is as a string)
+// LR: Must contain the return address
+// All AAPCS required registers are preserved,  X19-X29 and SP.
+get_input:
+  STR X30, [SP, #-16]!            // Push the Link Register onto the Stack
+
+  // print user input string
+  ldr x0,=szUserInput             // Loads the Address of szUserInput into x0
+  bl  putstring                   // Display the Prompt to the Console
+
+  // get input and store it in buffer
+  ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+  mov x1, BUFFER                  // Loads the Buffer amount into x1
+  bl  getstring                   // Get the String and Store 
+
+  ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+
+  LDR X30, [SP], #16                    // Pop the Link Register off the stack
+  RET                                   // Return from the functionn
+
 
 _main:
   // Test Information
@@ -137,35 +160,33 @@ _main:
     //------------------------------------------------------------------------------------------------
 
     //---Get Data from User Keyboard------------------------------------------------------------------
+    BL get_input
 
-    ldr x0,=szUserInput             // Loads the Address of szUserInput into x0
-    bl  putstring                   // Display the Prompt to the Console
+    MOV X0, X0          // setup params
+    bl  ascint64        // Conver the user input into a number to compare
 
-    ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
-    mov x1, BUFFER                  // Loads the Buffer amount into x1
-    bl  getstring                   // Get the String and Store 
-    ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
-    bl  ascint64                    // Conver the user input into a number to compare
+    cmp x0, #1          // Check if user entered option 1
+    b.eq Option1        // Branch and link to Option1
 
-    cmp x0, #1                      // Check if user entered option 1
-    b.eq Option1                    // Branch and link to Option1
+    cmp x0, #2          // Check if user entered option 1
+    b.eq Option2        // Branch and link to Option1
 
-    cmp x0, #3                      // Check if user entered option 3
-    b.eq Option3                    // Branch and link to Option3
+    cmp x0, #3          // Check if user entered option 3
+    b.eq Option3        // Branch and link to Option3
 
-    cmp x0, #5                      // Check if user enetered option 5
-    b.eq Option5                    // Branch and link to option5
+    cmp x0, #5          // Check if user enetered option 5
+    b.eq Option5        // Branch and link to option5
 
-    cmp x0, #7                      // Check if user entered option7
-    b.eq exit_program               // branch and link to exit program
+    cmp x0, #7          // Check if user entered option7
+    b.eq exit_program   // branch and link to exit program
 
     // if it gets here input was not a valid option
     B invalid_option
 
   //------------------------------------------------------------------------------------------------ 
     
-    // Preconditions - x0 must have the headPtr
-    //---Option 1 - View Strings---------------------------------------------------------------------
+  // Preconditions - x0 must have the headPtr
+  //---Option 1 - View Strings---------------------------------------------------------------------
   Option1:
     // Check if the LinkedList is Empty----------------------------------------------
 
@@ -216,6 +237,38 @@ _main:
         b   Menu                      // Display the Menu again 
     //-----------------------------------------------------------------------------------------------
 
+    // Preconditions - none
+    //---Option 2 - Add String---------------------------------------------------------------------
+    Option2:
+      BL print_option2_menu
+
+      LDR x0,=chCr                    // Loads the Address of chCr into x0
+      BL  putch                       // Display the newline characther to the console
+
+      BL get_input
+
+      LDRB W0, [X0]
+
+      CMP W0, #97            // Check if user entered option a
+      B.EQ option_keyboard   // Branch and link to option_keyboard
+
+      CMP W0, #98        // Check if user entered option b
+      B.EQ option_file   // Branch and link to option_file
+
+      B try_again   // Branch and link to try_again
+
+      option_keyboard:
+        B Menu
+
+      option_file:
+        B Menu
+
+      try_again:
+        LDR X0, =szErrorInvalidOption     // Loads the Address of szErrorInvalidOption
+        BL  putstring                     // Displays the Prompt to the Console
+        B Option2
+
+
     //---Option 3 - Delete Strings-------------------------------------------------------------------
     // Precondition: x0 contains the index of the string that is to be deleted
     Option3:
@@ -249,9 +302,11 @@ _main:
       b Menu                          // Loop back to the Menu
       //=---------------------------------------------------------------------------
 
-    
     //-----------------------------------------------------------------------------------------------
     invalid_option:
+      LDR X0, =szErrorInvalidOption     // Loads the Address of szErrorInvalidOption
+      BL  putstring                     // Displays the Prompt to the Console
+      B Menu
 
   exit_program:
     MOV   X0, #0   						// Use 0 return code
