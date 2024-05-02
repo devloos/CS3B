@@ -32,18 +32,9 @@
     szErrorInvalidOption:  .asciz "[ERROR]: Invalid option choose again.\n\n"
 
     szPrintEmpty:     .asciz    "[EMPTY]"
-    data1:            .asciz    "Cat in the Hat!\n"
-    data3:            .asciz    "By Dr. Seuss.\n"
-    data5:            .asciz    "The sun did not shine.\n"
-    data6:            .asciz    "It was too wet to play.\n"
-    data7:            .asciz    "So we sat in the house\n"
-    data8:            .asciz    "All that cold, cold, wet day.\n"
-    data10:            .asciz   "I sat there with Sally.\n"
-    data11:           .asciz    "We sat there, we two.\n"
-    data12:           .asciz    "And I said, How I wish\n"
-    data13:           .asciz    "We did nothing at all\n"
     chLeftBracket:    .ascii    "["
     chRightBracket:   .ascii    "]"
+    chTab:            .ascii    "\t"
     iIndex:           .word     0
     szIndex:          .skip     BUFFER
 
@@ -94,11 +85,13 @@ printStringWithIndexAndNewLine:
   ldr x0, =chRightBracket               // Load the address of chRightBracket
   bl putch                              // Display the closing bracket
 
+  // Print closing bracket
+  ldr x0, =chTab                        // Load the address of chRightBracket
+  bl putch                              // Display the closing bracket
+
   // Print the string from the node
   mov x0, x19                           // Move the copy address back into x0
   bl putstring                          // Display the string
-
-
 
   // Increment and store the index
   ldr x0, =iIndex                       // Load the address of iIndex
@@ -237,22 +230,6 @@ String_containsIgnoreCase:
 
 
 _main:
-  // Test Information
-  ldr x0,=data1
-  bl insert
-  ldr x0,=data3
-  bl insert
-  ldr x0,=data5
-  bl insert
-  ldr x0,=data6
-  bl insert
-  ldr x0,=data7
-  bl insert
-  ldr x0,=data8
-  bl insert
-
-
-
   BL print_header // Print the Header Information
 
   Menu:
@@ -385,6 +362,11 @@ _main:
         B Menu  // branch to menu
 
       option_file:
+
+        BL load_from_file
+
+        LDR X0,=chCr  // Loads the Address of chCr into x0
+        BL  putch     // Display the newline characther to the console
         B Menu
 
       try_again:
