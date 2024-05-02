@@ -28,6 +28,8 @@
     szUserInput3:     .asciz    "Enter the index to be deleted: "
     szUserInput4:     .asciz    "What are you looking for: "
     szUserInput5:     .asciz    "Input: "
+    szUserInput6:     .asciz    "Enter the index to be edited: "
+    szUserInput7:     .asciz    "Enter new string: "
 
     szErrorInvalidOption:  .asciz "[ERROR]: Invalid option choose again.\n\n"
 
@@ -252,6 +254,9 @@ _main:
     cmp x0, #3          // Check if user entered option 3
     b.eq Option3        // Branch and link to Option3
 
+    cmp x0, #4          // Check if user entered option 3
+    b.eq Option4        // Branch and link to Option3
+
     cmp x0, #5          // Check if user enetered option 5
     b.eq Option5        // Branch and link to option5
 
@@ -391,6 +396,41 @@ _main:
 
       bl Delete                       // x0 has the index to be deleted
 
+      b Menu                          // Loop back to the Menu
+
+    //---Option 4 - Edit String-------------------------------------------------------------------
+    // Precondition: x0 contains the index of the string that is to be deleted
+    Option4:
+      ldr x0,=szUserInput6             // Loads the Address of szUserInput into x0
+      bl  putstring                   // Display the Prompt to the Console
+
+      ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+      mov x1, BUFFER                  // Loads the Buffer amount into x1
+      bl  getstring                   // Get the String and Store 
+      ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+      bl  ascint64                    // Conver the user input into a number to compare
+
+      MOV X19, X0   // store the index
+
+      ldr x0,=szUserInput7             // Loads the Address of szUserInput into x0
+      bl  putstring                   // Display the Prompt to the Console
+
+      ldr x0,=szBuffer                // Loads the Address of szBuffer into x0
+      mov x1, BUFFER                  // Loads the Buffer amount into x1
+      bl  getstring                   // Get the String and Store 
+
+      LDR X0,=szBuffer     // Loads the Address of szBuffer into x0
+      MOV W1, #10         // stores \n
+      BL string_push_char  // returns new allocated string with char pushed back
+
+      MOV X20, X0   // store the new string
+
+      MOV X0, X19      // set param for index
+      MOV X1, X20      // set param for new string
+      BL edit_string
+
+      LDR X0,=chCr  // Loads the Address of chCr into x0
+      BL  putch     // Display the newline characther to the console
       b Menu                          // Loop back to the Menu
 
       //-----------------------------------------------------------------------------------------------

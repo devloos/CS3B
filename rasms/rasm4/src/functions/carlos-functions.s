@@ -8,6 +8,7 @@
 //*****************************************************************************
 
 .global load_from_file
+.global edit_string
 
 .equ BUFFER, 512
 .equ dfd, -100
@@ -16,6 +17,7 @@
 
 .data
   szUserInputFile:  .asciz    "Filename: "
+  szErrorIndexNotFound:  .asciz    "[ERROR] Index was not found.\n"
   szBuffer:         .skip     BUFFER
 
 .section .text
@@ -109,3 +111,46 @@ load_from_file:
   LDR X30, [SP], #16 			// pop link register off the stack
 
   RET
+
+edit_string:
+  STR X30, [SP, #-16]! // push link register onto the stack
+  STR X19, [SP, #-16]! // push X19 onto the stack
+  STR X20, [SP, #-16]! // push X20 onto the stack
+  STR X21, [SP, #-16]! // push X20 onto the stack
+
+  MOV X19, X0 // stores index into X19
+  MOV X20, X1 // stores new string into X20
+
+  BL get_head
+  LDR X0, [X0]      // load the value of head which is the first node
+
+  MOV X1, #0   // store an inner index to compare
+  edit_string_loop:
+    CMP X0, 0         // compare X1 and 0 if equal then branch to push_empty_list
+    B.EQ edit_string_index_not_found
+
+    CMP X1, X19   // check if the current index we are on equals wanted index
+    B.NE edit_string_continue
+
+    MOV X21, X0    // store node
+    LDR X0, [X21]  // load the value at the address stored by X1 into X1
+    BL free
+
+    STR X20, [X21]
+    B edit_string_return
+
+    edit_string_continue:
+      LDR X0, [X0, #8]  // load into x1 the value of next*
+      ADD X1, X1, #1    // add one to inner index
+      B edit_string_loop
+  
+  edit_string_index_not_found:
+    LDR x0,=szErrorIndexNotFound   // Loads the Address of szUserInputFile
+    BL  putstring          // Displays the Prompt to the Console
+
+  edit_string_return:
+    LDR X21, [SP], #16  // pop X20 off the stack
+    LDR X20, [SP], #16  // pop X20 off the stack
+    LDR X19, [SP], #16  // pop X19 off the stack
+    LDR X30, [SP], #16  // pop link register off the stack
+    RET                 // return from function
