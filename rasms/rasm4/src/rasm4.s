@@ -44,22 +44,6 @@
 
   .section .text
 
-convert_and_print_number:
-  STR X30, [SP, #-16]! 			// push link register onto the stack
-
-  LDR X1, =szBuffer   			// load the address of szBuffer into X0
-  BL int64asc         			// branch link to int64asc
-
-  LDR X0, =szBuffer   			// load the address of szBuffer into X0
-  BL putstring
-
-  LDR X0, =chCr  			// load the address of chCr into X0
-  BL putch       			// branch link to putch and print out chCr
-
-  LDR X30, [SP], #16 			// pop link register off the stack
-
-  RET
-
 // Preconditions: x0 must have the address of the string in the node
 // Postconditions: Displays the string with an index and a newline.
 // printStringWithIndexAndNewLine---------------------------------------------------------------------------

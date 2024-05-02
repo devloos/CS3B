@@ -18,7 +18,6 @@
   .data
     headPtr:    .quad  0
     tailPtr:    .quad  0
-    size:       .quad  0
   .section .text
 
 //                NODE -> also has address
@@ -107,11 +106,25 @@ insert:
 get_size:
   STR X30, [SP, #-16]! // push link register onto the stack
 
-  LDR X0, =size    // load the address of headPtr into X0
-  LDR X0, [X0]
+  LDR X0, =headPtr  // load the address of headPtr into X1
+  LDR X0, [X0]      // load the value at the address stored by X1 into X1
 
-  LDR X30, [SP], #16  // pop link register off the stack
-  RET                 // return from function
+  MOV X1, #0     // start size at 0
+  get_size_loop:
+    CMP X0, 0         // compare X1 and 0 if equal then branch to push_empty_list
+    B.EQ get_size_return
+
+    ADD X1, X1, #1    // add 1 node to size
+
+    LDR X0, [X0, #8]  // load into x1 the value of next*
+    B get_size_loop
+
+  get_size_return:
+    MOV X0, X1          // move size into return param
+
+    LDR X30, [SP], #16  // pop link register off the stack
+
+    RET                 // return from function
 
 // Subroutine foreach:
 //      for each every node in the linked list
@@ -122,7 +135,7 @@ foreach:
   STR X30, [SP, #-16]! // push link register onto the stack
   STR X19, [SP, #-16]! // push X19 onto the stack
 
-  MOV X19, X0 // store X0 into X19
+  MOV X19, X0 // store callback function
 
   LDR X0, =headPtr  // load the address of headPtr into X1
   LDR X0, [X0]      // load the value at the address stored by X1 into X1
