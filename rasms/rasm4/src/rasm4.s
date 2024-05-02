@@ -32,16 +32,13 @@
     szErrorInvalidOption:  .asciz "[ERROR]: Invalid option choose again.\n\n"
 
     szPrintEmpty:     .asciz    "[EMPTY]"
-    data1:            .asciz    "Cat in the Hat!"
-    data2:            .asciz    "\n\n"
-    data3:            .asciz     "By Dr. Seuss"
-    data4:            .asciz     "\n\n"
-    data5:            .asciz     "The sun did not shine.\n"
+    data1:            .asciz    "Cat in the Hat!\n"
+    data3:            .asciz    "By Dr. Seuss.\n"
+    data5:            .asciz    "The sun did not shine.\n"
     data6:            .asciz    "It was too wet to play.\n"
     data7:            .asciz    "So we sat in the house\n"
     data8:            .asciz    "All that cold, cold, wet day.\n"
-    data9:            .asciz    "\n\n"
-    data10:            .asciz    "I sat there with Sally.\n"
+    data10:            .asciz   "I sat there with Sally.\n"
     data11:           .asciz    "We sat there, we two.\n"
     data12:           .asciz    "And I said, How I wish\n"
     data13:           .asciz    "We did nothing at all\n"
@@ -243,11 +240,7 @@ _main:
   // Test Information
   ldr x0,=data1
   bl insert
-  ldr x0,=data2
-  bl insert
   ldr x0,=data3
-  bl insert
-  ldr x0,=data4
   bl insert
   ldr x0,=data5
   bl insert
@@ -380,7 +373,8 @@ _main:
         BL  getstring        // Get the String and Store 
 
         LDR X0,=szBuffer     // Loads the Address of szBuffer into x0
-        BL string_copy
+        MOV W1, #10         // stores \n
+        BL string_push_char  // returns new allocated string with char pushed back
 
         MOV X0, X0  // setup insert params
         BL insert   // branch link into insert

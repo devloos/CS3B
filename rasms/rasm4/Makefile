@@ -1,10 +1,10 @@
 CC=as
 LL=ld
-OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o obj/print.o obj/string-copy.o obj/String2.o obj/String1.o
+OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o obj/print.o obj/string.o obj/String2.o obj/String1.o
 
 all: rasm4
 
-rasm4: rasm4.o shiv-functions.o carlos-functions.o linked-list.o print.o string-copy.o
+rasm4: rasm4.o shiv-functions.o carlos-functions.o linked-list.o print.o string.o String1.o String2.o
 	$(LL) -o build/rasm4 --entry=_main /usr/lib/aarch64-linux-gnu/libc.so.6 build/rasm4.o $(OBJ) -dynamic-linker /lib/ld-linux-aarch64.so.1
 
 shiv-functions.o: src/functions/shiv-functions.s
@@ -19,8 +19,8 @@ String1.o: src/utility/String1.s
 String2.o: src/utility/String2.s 
 	$(CC) -g -o obj/String2.o src/utility/String2.s
 
-string-copy.o: src/utility/string-copy.s 
-	$(CC) -g -o obj/string-copy.o src/utility/string-copy.s
+string.o: src/utility/string.s 
+	$(CC) -g -o obj/string.o src/utility/string.s
 
 linked-list.o: src/linked-list.s
 	$(CC) -g -o obj/linked-list.o src/linked-list.s
