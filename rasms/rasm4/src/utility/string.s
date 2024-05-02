@@ -102,7 +102,7 @@ string_push_char:
   LDR X19, [SP], #16   // pop link X19 off the stack
   LDR X30, [SP], #16   // pop link register off the stack
 
-  RET  // return  .global String_replace
+  RET  
 
 
 String_equalsIgnoreCase:

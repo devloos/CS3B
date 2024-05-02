@@ -13,6 +13,7 @@
   .global foreach
   .global isEmpty
   .global deleteNode
+  .global free_list
 
   .data
     headPtr:    .quad  0
@@ -191,15 +192,51 @@ deleteNode:
   
   //----Node Found--------------------------------------------------
   nodeFound:
+      // stitching
       ldr x1, [x0]          // Load Whatever is in the nextPtr of the node into x1
       add x1, x1, #8        // add 8 and get the nextPtr of that Node
       ldr x2, [x1]          // Get the address of the next next Node
       str x2, [x0]          // Set the Previous Node equal to the next next Node
       sub x1, x1, #8        // Subtract to get the address back of the node that needs to be freed now
-      mov x0, x1            // move that address bac into x0
-      bl free               // free that memory space
+
+      MOV X19, X1       // store node
+      LDR X0, [X1]      // load the string adr
+      BL free           // free string
+
+      mov x0, x19       // load node
+      bl free           // free that memory space
   //----------------------------------------------------------------
   endDeleteNode:
       ldr x19, [SP], #16        // Pop x19 off the stack
       ldr x30, [SP], #16        // Pop the Link Register off the stack
       ret                       // Return
+
+free_list:
+  STR X30, [SP, #-16]! // push link register onto the stack
+
+  LDR X0, =headPtr  // load the address of headPtr into X1
+  LDR X0, [X0]      // load the value at the address stored by X1 into X1
+
+  free_list_inner:
+    CMP X0, 0         // compare X1 and 0 if equal then branch to push_empty_list
+    B.EQ free_list_return
+
+    STR X0, [SP, #-16]! // push X0 onto the stack
+
+    LDR X0, [X0]      // load the value at the address stored by X1 into X1
+    BL free
+
+    LDR X0, [SP], #16  // pop X0 off the stack
+
+    LDR X19, [X0, #8]  // load into x1 the value of next*
+    STR X19, [SP, #-16]! // push X0 onto the stack
+
+    BL free
+
+    LDR X0, [SP], #16  // pop X0 off the stack
+
+    B free_list_inner
+
+  free_list_return:
+    LDR X30, [SP], #16  // pop link register off the stack
+    RET                 // return from function

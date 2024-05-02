@@ -167,21 +167,7 @@ String_containsIgnoreCase:
 
 	cmp x0, #0					// Compare x0 with 0
 	b.ge stringExists			// If greater than 0 stringExists
-	b stringNotExists			// Branch to this If does Not exists
-
-
-	stringNotExists:
-    STR X22, [SP, #-16]! // push X19 onto the stack
-		mov x0, x21								// Free the block in x0
-		bl free
-    mov x21, #0x0               // set to null
-    ldr x22, [SP], #16						// Pop the lr off the stack
-		mov x0, x22								// Free the block in x0
-		bl free
-    mov x22, #0x0               // set to null		
-    mov x3, #0x0
-    mov x6, #0x0
-    b cleanUPP
+	b cleanup			// Branch to this If does Not exists
 
   stringExists:
 		// Load the current index and convert to string
@@ -203,12 +189,26 @@ String_containsIgnoreCase:
     ldr x0, =chRightBracket               // Load the address of chRightBracket
     bl putch                              // Display the closing bracket
 
+    // Print closing bracket
+    ldr x0, =chTab // Load the address of chTab
+    bl putch                              // Display the closing bracket
+
     // Print the string from the node
     mov x0, x19                           // Move the copy address back into x0
     bl putstring                          // Display the string
 
 
-  cleanUPP:
+  cleanup:
+		mov x0, x21								// Free the block in x0
+		bl free
+
+    mov x21, #0x0               // set to null		
+
+		mov x0, x22								// Free the block in x0
+		bl free
+
+    mov x22, #0x0               // set to null		
+
     // Increment and store the index
     ldr x0, =iIndex                       // Load the address of iIndex
     ldr w1, [x0]                          // Load the current index value
@@ -445,18 +445,15 @@ _main:
       mov x1, BUFFER                    // Loads the Buffer amount into x1
       bl  getstring                     // Get the String and Store 
 
-
-
       ldr x0,=szBuffer
       bl Search
 
+      ldr x0,=iIndex                // Loads the Address of iIndex into x0
+      mov x1, #0                    // x1 = 0
+      str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
 
-
-        ldr x0,=iIndex                // Loads the Address of iIndex into x0
-        mov x1, #0                    // x1 = 0
-        str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
-        b   Menu                      // Display the Menu again 
-
+      ldr x0,=chCr                    // Loads the Address of chCr into x0
+      bl  putch                       // Display the newline characther to the console
 
       b Menu                          // Loop back to the Menu
       //=---------------------------------------------------------------------------
@@ -468,6 +465,8 @@ _main:
       B Menu
 
   exit_program:
+    BL free_list
+
     MOV   X0, #0   						// Use 0 return code
     MOV   X8, #93  						// Service Command Code 93 terminates this program
     SVC   0        						// Call linux to terminate the program
