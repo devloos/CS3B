@@ -434,6 +434,14 @@ _main:
       ldr x0,=szBuffer
       bl Search
 
+
+
+        ldr x0,=iIndex                // Loads the Address of iIndex into x0
+        mov x1, #0                    // x1 = 0
+        str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
+        b   Menu                      // Display the Menu again 
+
+
       b Menu                          // Loop back to the Menu
       //=---------------------------------------------------------------------------
 
