@@ -1,6 +1,6 @@
 CC=as
 LL=ld
-OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o obj/print.o obj/string-copy.o
+OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/shiv-functions.o obj/carlos-functions.o obj/linked-list.o obj/print.o obj/string-copy.o obj/String2.o obj/String1.o
 
 all: rasm4
 
@@ -15,6 +15,9 @@ carlos-functions.o: src/functions/carlos-functions.s
 
 String1.o: src/utility/String1.s 
 	$(CC) -g -o obj/String1.o src/utility/String1.s
+
+String2.o: src/utility/String2.s 
+	$(CC) -g -o obj/String2.o src/utility/String2.s
 
 string-copy.o: src/utility/string-copy.s 
 	$(CC) -g -o obj/string-copy.o src/utility/string-copy.s

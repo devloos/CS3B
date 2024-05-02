@@ -65,9 +65,9 @@ String_equalsIgnoreCase:
 String_copy:
 	str x30, [SP, #-16]!				// Store the link register on the stack
 	
-	mov x19, x0					// Whatever is in x0 move it to x19
+	mov x19, x0							// Whatever is in x0 move it to x19
 	str x19, [SP, #-16]!				// Push x19 onto the stack [x19 hold the address of the string that we are trying to copy]	
-	mov x20, x1					// move x1 into x21
+	mov x20, x1							// move x1 into x21
 	str x20, [SP, # -16]!				// Push x1 onto the register	
 	bl String_length				// Branch and Link to String Length to get the number of bytes to create dynamically
 	bl malloc					// call malloc to get the number of bytes and store the address in x0
@@ -86,7 +86,7 @@ String_copy:
 
 	end_String_copy:
 		ldr x20, [SP], #16			// pop x20 off the stack [x20 contains the address of the string we want to copy too]
-		mov x6, x0				// x0 is now stored in x3
+		mov x6, x0					// x0 is now stored in x3
 		ldr x19, [SP], #16			// return back to the original address of the dynamically created string
 		mov x0, x19 				// x19 is now in x0
 		bl String_length			// get the length of the string back (x0 now has the string_lenght)

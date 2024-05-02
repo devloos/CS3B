@@ -11,7 +11,7 @@
 	.global ViewStrings
 	.global Delete
 	.global print_string
-
+	.global Search
 	.data
   	chCr: .byte 10
 
@@ -63,7 +63,23 @@ Delete:
 	ret											// return
 //---------------------------------------------------------------------------------------------
 
-//--5 - Search Node ---------------------------------------------------------------------------
-	STR X30, [SP, #-16]!						// push the link register on the stack
-	ldr x30, [SP], #16							// pop the link register off the stack
-//---------------------------------------------------------------------------------------------
+// Search - Searches for a substring in all nodes of the linked list and prints results
+// X0: address of the substring to search
+Search:
+    STR X30, [SP, #-16]!            // Save the link register
+    
+	ADR x0, String_containsIgnoreCase				// Load the Address of the function checkString
+	bl foreach
+
+
+
+    LDR X30, [SP], #16          // Restore X30
+    RET                         // Return from the function
+
+
+
+
+
+
+
+

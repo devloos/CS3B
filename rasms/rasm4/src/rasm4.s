@@ -15,13 +15,14 @@
 // set global start as the main entry
   .global _main
   .global printStringWithIndexAndNewLine
+  .global String_containsIgnoreCase
 
   .equ BUFFER, 512
 
   .section .data
 
     szBuffer:         .skip     BUFFER
-
+    szTemp:           .skip     BUFFER                                            //Hold previous changes
     szUserInput:      .asciz    "Enter a choice: "
     szUserInput2:     .asciz    "Press Enter to Return: "
     szUserInput3:     .asciz    "Enter the index to be deleted: "
@@ -31,16 +32,19 @@
     szErrorInvalidOption:  .asciz "[ERROR]: Invalid option choose again.\n\n"
 
     szPrintEmpty:     .asciz    "[EMPTY]"
-    data1:            .asciz    "The Cat in the Hat\n"
-    data2:            .asciz    "By Dr. Seuss\n"
-    data3:            .asciz    "The sun did not shine.\n"
-    data4:            .asciz    "It was too wet to play.\n"
-    data5:            .asciz    "So we sat in the house\n"
-    data6:            .asciz    "All that cold, cold, wet day.\n"
-    data7:            .asciz    "\n"
-    data8:            .asciz    "I sat there with Sally.\n"
-    data9:            .asciz    "We sat there, we two\n"
-    data10:           .asciz    "We had something to do!\n"
+    data1:            .asciz    "Cat in the Hat!"
+    data2:            .asciz    "\n\n"
+    data3:            .asciz     "By Dr. Seuss"
+    data4:            .asciz     "\n\n"
+    data5:            .asciz     "The sun did not shine.\n"
+    data6:            .asciz    "It was too wet to play.\n"
+    data7:            .asciz    "So we sat in the house\n"
+    data8:            .asciz    "All that cold, cold, wet day.\n"
+    data9:            .asciz    "\n\n"
+    data10:            .asciz    "I sat there with Sally.\n"
+    data11:           .asciz    "We sat there, we two.\n"
+    data12:           .asciz    "And I said, How I wish\n"
+    data13:           .asciz    "We did nothing at all\n"
     chLeftBracket:    .ascii    "["
     chRightBracket:   .ascii    "]"
     iIndex:           .word     0
@@ -97,6 +101,8 @@ printStringWithIndexAndNewLine:
   mov x0, x19                           // Move the copy address back into x0
   bl putstring                          // Display the string
 
+
+
   // Increment and store the index
   ldr x0, =iIndex                       // Load the address of iIndex
   ldr w1, [x0]                          // Load the current index value
@@ -128,6 +134,109 @@ get_input:
 
   LDR X30, [SP], #16                    // Pop the Link Register off the stack
   RET                                   // Return from the functionn
+//---------------------------------------------------------------------------------------------------------
+
+
+
+//-- CheckString------------------------------------------------------------------------------
+//x0 contains the address of the string 
+//x1- contains the substring
+//x0 contains the address of the string 
+//x1- contains the substring
+String_containsIgnoreCase: 
+    // Save registers
+    STR X30, [SP, #-16]!    // Save the link register
+    STR X19, [SP, #-16]! // push X19 onto the stack
+    STR X20, [SP, #-16]! // push X19 onto the stack
+    STR X21, [SP, #-16]! // push X19 onto the stack
+    STR X22, [SP, #-16]! // push X19 onto the stack
+
+    ldr x1,=szBuffer
+	  mov x19, x0				// Move the address of the string node into x19
+	  mov x20, x1				// Move the address of the substring into x20
+	// LowerCase for node String----------------------------------------
+	mov x0, x19				// Move the address of the string node back into x0
+	bl String_toLowerCase	// Branch and Link to String_toLowerCase
+	mov x21, x0				// Contains the lowercase dynamically created version of string node
+	//-------------------------------------------------------------------
+
+	// LowerCase for substring String----------------------------------------
+	mov x0, x20				// Move the address of the string node back into x0
+	bl String_toLowerCase		// Branch and Link to String_toLowerCase
+	mov x22, x0					// Contains the dynamically created lowercase version of substring node
+	//-------------------------------------------------------------------
+
+
+	//Check if substring exists in the string-----------------------------------
+	mov x0, x21					// The address of the string node moves into x0 (Argument)
+	mov x1, x22					// The address of the substring moves into x1   (Argument)
+	bl String_indexOf_3			// Returns a number which is the index that the substring occurs
+	//--------------------------------------------------------------------------
+
+	cmp x0, #0					// Compare x0 with 0
+	b.ge stringExists			// If greater than 0 stringExists
+	b stringNotExists			// Branch to this If does Not exists
+
+
+	stringNotExists:
+    STR X22, [SP, #-16]! // push X19 onto the stack
+		mov x0, x21								// Free the block in x0
+		bl free
+    mov x21, #0x0               // set to null
+    ldr x22, [SP], #16						// Pop the lr off the stack
+		mov x0, x22								// Free the block in x0
+		bl free
+    mov x22, #0x0               // set to null		
+    mov x3, #0x0
+    mov x6, #0x0
+    b cleanUPP
+
+  stringExists:
+		// Load the current index and convert to string
+    ldr x0, =iIndex                       // Load the address of iIndex
+    ldr w1, [x0]                          // Load the value of iIndex into w1
+    mov w0, w1                            // Move the index value to x0 for conversion
+    ldr x1, =szIndex                      // Load the address of the buffer szIndex
+    bl int64asc                           // Convert the integer index to a string in szIndex
+
+    // Print opening bracket
+    ldr x0, =chLeftBracket                // Load the address of chLeftBracket
+    bl putch                              // Display the opening bracket to the console
+
+    // Print the index
+    ldr x0, =szIndex                      // Load the address of the buffer containing the index string
+    bl putstring                          // Display the index string
+
+    // Print closing bracket
+    ldr x0, =chRightBracket               // Load the address of chRightBracket
+    bl putch                              // Display the closing bracket
+
+    // Print the string from the node
+    mov x0, x19                           // Move the copy address back into x0
+    bl putstring                          // Display the string
+
+
+  cleanUPP:
+    // Increment and store the index
+    ldr x0, =iIndex                       // Load the address of iIndex
+    ldr w1, [x0]                          // Load the current index value
+    add w1, w1, #1                        // Increment the index
+    str w1, [x0]                          // Store the incremented index back to iIndex
+
+    ldr x22, [SP], #16						// Pop the lr off the stack
+    ldr x21, [SP], #16						// Pop the lr off the stack
+    ldr x20, [SP], #16						// Pop the lr off the stack
+    ldr x19, [SP], #16						// Pop the lr off the stack
+		ldr x30, [SP], #16						// Pop the lr off the stack
+		adr x19, String_containsIgnoreCase
+		ret
+	//--------------------------------------------------------------------------ction
+
+//---------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
 _main:
@@ -148,10 +257,8 @@ _main:
   bl insert
   ldr x0,=data8
   bl insert
-  ldr x0,=data9
-  bl insert
-  ldr x0,=data10
-  bl insert
+
+
 
   BL print_header // Print the Header Information
 
@@ -214,6 +321,12 @@ _main:
       bl  putch                         // Display the newline characther to the console
       
     endOption1:
+      // Clear Buffer----------------------------------------------------------------
+      ldr x0,=szBuffer                  // Loads the address of szBuffer into x0
+      mov x1, #0                        // Loads 0 into x1
+      str x1, [x0]                      // Clears the content of szBuffer by putting it to all 0
+      //--------------------------------------------------------------------------------
+
       ldr x0,=szUserInput2              // Loads the address of szUserInput2
       bl  putstring                     // Displays the prompt to the Screen
       ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
@@ -222,7 +335,7 @@ _main:
       
       ldr x0,=szBuffer                  // Loads into x0 szBuffer
       ldr x0, [x0]                      // Loads the Value of szBuffer into x0
-      cmp x0, #0                        // If it equals to 0
+      cmp x0, #0x00                       // If it equals to 0
       b.eq clearOption1                 // Branch to this Label
       b endOption1                      // Get the Input Again
 
@@ -315,6 +428,11 @@ _main:
       ldr x0,=szBuffer                  // Loads the Address of szBuffer into x0
       mov x1, BUFFER                    // Loads the Buffer amount into x1
       bl  getstring                     // Get the String and Store 
+
+
+
+      ldr x0,=szBuffer
+      bl Search
 
       b Menu                          // Loop back to the Menu
       //=---------------------------------------------------------------------------

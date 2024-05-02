@@ -22,7 +22,7 @@ string_copy:
   MOV X19, X0  // move the address of the first string into X4
 
   MOV X0, X19  // move the address of the first string into X4
-  BL count_bytes
+  BL String_length
 
   MOV  X0, X0 // move the value of 16 into X0
   BL   malloc // branch link to malloc 
