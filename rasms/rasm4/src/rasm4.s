@@ -260,6 +260,9 @@ _main:
     cmp x0, #5          // Check if user enetered option 5
     b.eq Option5        // Branch and link to option5
 
+    cmp x0, #6          // Check if user enetered option 5
+    b.eq Option6        // Branch and link to option5
+
     cmp x0, #7          // Check if user entered option7
     b.eq exit_program   // branch and link to exit program
 
@@ -452,6 +455,16 @@ _main:
       mov x1, #0                    // x1 = 0
       str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
 
+      ldr x0,=chCr                    // Loads the Address of chCr into x0
+      bl  putch                       // Display the newline characther to the console
+
+      b Menu                          // Loop back to the Menu
+      //=---------------------------------------------------------------------------
+
+    //---Option 5 - Search Strings-------------------------------------------------------------------
+    Option6:
+      BL save_file
+    
       ldr x0,=chCr                    // Loads the Address of chCr into x0
       bl  putch                       // Display the newline characther to the console
 

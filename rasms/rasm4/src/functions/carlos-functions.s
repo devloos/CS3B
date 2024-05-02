@@ -9,10 +9,11 @@
 
 .global load_from_file
 .global edit_string
+.global save_file
 
 .equ BUFFER, 512
 .equ dfd, -100
-.equ mode, 0100
+.equ mode, 0102
 .equ permissions, 0660
 
 .data
@@ -154,3 +155,54 @@ edit_string:
     LDR X19, [SP], #16  // pop X19 off the stack
     LDR X30, [SP], #16  // pop link register off the stack
     RET                 // return from function
+
+save_file:
+  STR X30, [SP, #-16]! // push link register onto the stack
+  STR X19, [SP, #-16]! // push X19 onto the stack
+
+  LDR x0,=szUserInputFile   // Loads the Address of szUserInputFile
+  BL  putstring          // Displays the Prompt to the Console
+
+  LDR X0,=szBuffer     // Loads the Address of szBuffer into x0
+  MOV X1, BUFFER       // Loads the Buffer amount into x1
+  BL  getstring        // Get the String and Store 
+
+  MOV X0, #dfd          // mov dfd (current directory) into X0
+  LDR X1, =szBuffer     // load the address of filename into X0
+  MOV X2, #mode         // load mode into X0
+  MOV X3, #permissions  // give read write perms
+  MOV X8, #56           // sys call openat
+  SVC #0                // call sys
+
+  MOV X19, X0  // store file descriptor
+
+  BL get_head
+  LDR X0, [X0]      // load node address
+
+  save_file_loop:
+    CMP X0, 0         // compare X1 and 0 if equal then branch to push_empty_list
+    B.EQ save_file_loop_end
+
+    MOV X20, X0   // move node into X20
+
+    LDR X0, [X20]      // get the string address
+    BL String_length
+    MOV X2, X0         // store how many bytes
+
+    MOV X0, X19        // get file descriptor set it to second param of write sys call
+    LDR X1, [X20]      // get the string address
+    MOV X8, #64        // sys call write
+    SVC #0             // call sys
+
+    LDR X0, [X20, #8]  // load into x1 the value of next*
+    B save_file_loop
+
+  save_file_loop_end:
+
+  MOV X0, X19    // get file descriptor
+  MOV X8, #0x39  // sys call close
+  SVC #0         // call sys
+
+  LDR X19, [SP], #16  // pop X19 off the stack
+  LDR X30, [SP], #16  // pop link register off the stack
+  RET                 // return from function
