@@ -1,6 +1,7 @@
 .global print_menu
 .global print_header
 .global print_option2_menu
+.global convert_and_print_number
 
 .equ BUFFER, 512
 

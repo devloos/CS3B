@@ -26,7 +26,7 @@
     szUserInput:      .asciz    "Enter a choice: "
     szUserInput2:     .asciz    "Press Enter to Return: "
     szUserInput3:     .asciz    "Enter the index to be deleted: "
-    szUserInput4:     .asciz    "What are you looking for: "
+    szUserInput4:     .asciz    "Search: "
     szUserInput5:     .asciz    "Input: "
     szUserInput6:     .asciz    "Enter the index to be edited: "
     szUserInput7:     .asciz    "Enter new string: "
@@ -36,9 +36,12 @@
     szPrintEmpty:     .asciz    "[EMPTY]"
     chLeftBracket:    .ascii    "["
     chRightBracket:   .ascii    "]"
+    chOpenParen:      .ascii    "("
+    szFileSearch:     .ascii    " hits in 1 file of 1 searched)"
     chTab:            .ascii    "\t"
     iIndex:           .word     0
     szIndex:          .skip     BUFFER
+    dbCounter:         .quad     0
 
     chCr: .byte 10
 
@@ -180,6 +183,13 @@ String_containsIgnoreCase:
     // Print the string from the node
     mov x0, x19                           // Move the copy address back into x0
     bl putstring                          // Display the string
+
+    ldr x0, =dbCounter                       // Load the address of iIndex
+    ldr X0, [x0]                          // Load the value of iIndex into w1
+    ADD X0, X0, #1
+
+    ldr x1, =dbCounter                       // Load the address of iIndex
+    STR X0, [x1]                          // Load the value of iIndex into w1
 
 
   cleanup:
@@ -435,9 +445,26 @@ _main:
       ldr x0,=szBuffer
       bl Search
 
+      ldr x0,=chOpenParen             // Loads the Address of szUserInput into x0
+      bl  putch                      // Display the Prompt to the Console
+
+      ldr x0, =dbCounter                       // Load the address of iIndex
+      ldr X0, [x0]                          // Load the value of iIndex into w1
+      BL convert_and_print_number
+
+      ldr x0,=szFileSearch             // Loads the Address of szUserInput into x0
+      bl  putstring                      // Display the Prompt to the Console
+
       ldr x0,=iIndex                // Loads the Address of iIndex into x0
       mov x1, #0                    // x1 = 0
       str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
+
+      ldr x0,=dbCounter             // Loads the Address of iIndex into x0
+      mov x1, #0                    // x1 = 0
+      str x1, [x0]                  // Store the 0 into iIndex - Reset iIndex
+
+      ldr x0,=chCr                    // Loads the Address of chCr into x0
+      bl  putch                       // Display the newline characther to the console
 
       ldr x0,=chCr                    // Loads the Address of chCr into x0
       bl  putch                       // Display the newline characther to the console
