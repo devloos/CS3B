@@ -4,6 +4,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <exception>
 
-extern "C" void insertion_sort(int arr[], int len);
-extern "C" void bubble_sort(int arr[], int len);
+typedef long long quad;
+
+extern "C" void insertion_sort(quad arr[], int len);
+extern "C" void bubble_sort(quad arr[], int len);

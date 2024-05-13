@@ -11,6 +11,5 @@ enum struct Option {
 };
 
 void printMenu();
-void printHeader();
 
-Option getInput(std::string prefix);
+Option getInput(const std::string &prefix);

@@ -1,4 +1,6 @@
-void insertionSort(int arr[], int len) {
+#include "../include/algorithms.h"
+
+void insertionSort(quad arr[], int len) {
   for (int i = 0; i < len; ++i) {
     int j = i + 1;
 
@@ -13,7 +15,7 @@ void insertionSort(int arr[], int len) {
   }
 }
 
-void BubbleSort(int a[], int length) {
+void BubbleSort(quad a[], int length) {
   int i, j, temp;
 
   for (i = 0; i < length; i++) {

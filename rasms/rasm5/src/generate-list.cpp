@@ -1,10 +1,12 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <climits>
+
 
 const int LIST_SIZE = 200000;
 
-int generateList() {
+int main() {
   std::ofstream outFile("input.txt");
 
   /**
@@ -17,7 +19,7 @@ int generateList() {
   std::mt19937 rng(rseed());
 
   // A discrete random distribution on the range @f$[min, max]@f$ with equal
-  std::uniform_int_distribution<int> dist(INT32_MIN, INT32_MAX);
+  std::uniform_int_distribution<long long> dist(LLONG_MIN, LLONG_MAX);
 
   for (int i = 0; i < LIST_SIZE; ++i) {
     outFile << dist(rng) << "\n";

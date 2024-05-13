@@ -12,20 +12,7 @@ void printMenu() {
   std::cout << "<6> Quit.\n";
 }
 
-void printHeader() {
-
-  std::cout << "RASM5 C vs Assembly\n";
-  std::cout << "File Element Count:           \n";
-
-  std::cout << "C        Bubblesort Time:      \n";
-  std::cout << "Assembly Bubblesort Time:      \n\n";
-
-  std::cout << "C        Insertion Sort Time:  \n";
-  std::cout << "Assembly Insertion Sort Time:  \n";
-  std::cout << "------------------------------------------------\n";
-}
-
-Option getInput(std::string prefix) {
+Option getInput(const std::string &prefix) {
   int option = -1;
   bool inputValid = false;
 
