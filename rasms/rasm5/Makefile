@@ -1,4 +1,4 @@
-CC=g++
+CC=g++ -O3
 OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/menu.o build/main.o obj/algorithms.o obj/asm-algorithms.o
 
 all: main
