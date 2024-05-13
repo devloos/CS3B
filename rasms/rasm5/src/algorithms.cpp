@@ -5,7 +5,7 @@ void insertionSort(quad arr[], int len) {
     int j = i;
 
     while (j > 0 && arr[j - 1] > arr[j]) {
-      int temp = arr[j - 1];
+      quad temp = arr[j - 1];
       arr[j - 1] = arr[j];
       arr[j] = temp;
       --j;
@@ -14,7 +14,8 @@ void insertionSort(quad arr[], int len) {
 }
 
 void BubbleSort(quad a[], int length) {
-  int i, j, temp;
+  int i, j;
+  quad temp;
 
   for (i = 0; i < length; i++) {
     for (j = 0; j < length - i - 1; j++) {
