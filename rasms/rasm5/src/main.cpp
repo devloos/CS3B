@@ -54,7 +54,7 @@ int main() {
   do {
     std::cout << "RASM5 C vs Assembly\n";
     std::cout << "File Element Count:            " << list.size() << "\n";
-
+    std::cout << "------------------------------------------------\n";
     std::cout << "C        Bubblesort Time:      " << c_bubblesort_time << " secs\n";
     std::cout << "Assembly Bubblesort Time:      " << a_bubblesort_time << " secs\n\n";
 

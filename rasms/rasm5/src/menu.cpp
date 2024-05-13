@@ -25,12 +25,12 @@ Option getInput(const std::string &prefix) {
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
       if (std::cin.fail() || option < 1 || option > 6) {
-        throw std::invalid_argument("[ERROR]: Option not valid!");
+        throw std::invalid_argument("[ERROR]: Option not valid! Try again.");
       }
 
       inputValid = true;
-    } catch (std::exception e) {
-      std::cerr << e.what();
+    } catch (std::exception &e) {
+      std::cerr << e.what() << "\n\n";
     }
   }
 
