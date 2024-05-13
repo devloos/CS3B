@@ -18,24 +18,24 @@ int main() {
     option = getInput(std::string("Enter option: "));
 
     switch (option) {
-    case Option::Load:
-      std::cout << "Loading!\n";
-      break;
-    case Option::BubbleSortC:
-      BubbleSort(list.data(), list.size());
-      break;
-    case Option::BubbleSortAsm:
-      bubble_sort(list.data(), list.size());
-      break;
-    case Option::InsertionSortC:
-      insertionSort(list.data(), list.size());
-      break;
-    case Option::InsertionSortAsm:
-      insertion_sort(list.data(), list.size());
-      break;
-    case Option::Quit:
-      std::cout << "Thank you!\n";
-      break;
+      case Option::Load:
+        std::cout << "Loading!\n";
+        break;
+      case Option::BubbleSortC:
+        BubbleSort(list.data(), list.size());
+        break;
+      case Option::BubbleSortAsm:
+        bubble_sort(list.data(), list.size());
+        break;
+      case Option::InsertionSortC:
+        insertionSort(list.data(), list.size());
+        break;
+      case Option::InsertionSortAsm:
+        insertion_sort(list.data(), list.size());
+        break;
+      case Option::Quit:
+        std::cout << "Thank you!\n";
+        break;
     }
 
     std::cout << "\n\n\n";
