@@ -4,7 +4,7 @@
 
 const int LIST_SIZE = 200000;
 
-int main() {
+int generateList() {
   std::ofstream outFile("input.txt");
 
   /**

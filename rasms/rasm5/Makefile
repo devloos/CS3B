@@ -1,18 +1,23 @@
-CC=as
-LL=ld
-OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/print.o 
+CC=g++
+OBJ=obj/putstring.o obj/String_length.o obj/putch.o obj/ascint64.o obj/int64asc.o obj/getstring.o obj/hex64asc.o obj/menu.o build/main.o obj/algorithms.o obj/asm-algorithms.o
 
-all: rasm5
+all: main
 
-rasm5: print.o rasm5.o 
-	$(LL) -o build/rasm5 --entry=_main /usr/lib/aarch64-linux-gnu/libc.so.6 build/rasm5.o $(OBJ) -dynamic-linker /lib/ld-linux-aarch64.so.1
+main: menu.o algorithms.o asm-algorithms.o main.o
+	$(CC) -o build/main $(OBJ) 
 
-print.o: src/print.s
-	$(CC) -g -o obj/print.o src/print.s
+menu.o: src/menu.cpp
+	$(CC) -c src/menu.cpp -o obj/menu.o
 
-rasm5.o: src/rasm5.s
-	$(CC) -g -o build/rasm5.o src/rasm5.s
+algorithms.o: src/algorithms.cpp
+	$(CC) -c src/algorithms.cpp -o obj/algorithms.o
+
+asm-algorithms.o: src/asm-algorithms.s
+	as -g -o obj/asm-algorithms.o src/asm-algorithms.s
+
+main.o: src/main.cpp
+	$(CC) -c src/main.cpp -o build/main.o
 
 clean:
 	rm build/*.o
-	rm build/rasm5
+	rm build/main
