@@ -5,8 +5,8 @@
 
 .data
   szBuffer:         .skip     BUFFER
-  szAsmBubbleSort:     .asciz    "ASM BUBBLE SORT!\n"
-  szAsmInsertionSort:     .asciz    "ASM INSERTION SORT!\n"
+  szAsmBubbleSort:     .asciz    "ASM BUBBLE SORT!"
+  szAsmInsertionSort:     .asciz    "ASM INSERTION SORT!"
   chCr: .byte 10
 
 .text

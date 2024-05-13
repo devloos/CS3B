@@ -14,7 +14,7 @@ void readList(const std::string &fileName, std::vector<quad> &list) {
   std::ifstream inFile(fileName);
 
   while (!inFile.eof()) {
-    int num = 0;
+    quad num = 0;
     inFile >> num;
 
     if (inFile.fail()) {
@@ -25,6 +25,21 @@ void readList(const std::string &fileName, std::vector<quad> &list) {
   }
 
   inFile.close();
+}
+
+int benchmarkAlgo(void (*func) (quad arr[], int len), quad arr[], int len) {
+  using std::chrono::high_resolution_clock;
+  using std::chrono::duration_cast;
+  using std::chrono::seconds;
+
+  auto t1 = high_resolution_clock::now();
+  func(arr, len);
+  auto t2 = high_resolution_clock::now();
+
+  // get delta T
+  auto secs = duration_cast<seconds>(t2 - t1);
+
+  return secs.count();
 }
 
 int main() {
@@ -38,7 +53,7 @@ int main() {
 
   do {
     std::cout << "RASM5 C vs Assembly\n";
-    std::cout << "File Element Count:           \n";
+    std::cout << "File Element Count:            " << list.size() << "\n";
 
     std::cout << "C        Bubblesort Time:      " << c_bubblesort_time << " secs\n";
     std::cout << "Assembly Bubblesort Time:      " << a_bubblesort_time << " secs\n\n";
@@ -58,19 +73,19 @@ int main() {
         readList("input.txt", list);
         break;
       case Option::BubbleSortC:
-        BubbleSort(copiedList.data(), copiedList.size());
+        c_bubblesort_time = benchmarkAlgo(BubbleSort, copiedList.data(), copiedList.size());
         saveList("c_bubblesort.txt", copiedList);
         break;
       case Option::BubbleSortAsm:
-        bubble_sort(copiedList.data(), copiedList.size());
+        a_bubblesort_time = benchmarkAlgo(bubble_sort, copiedList.data(), copiedList.size());
         saveList("a_bubblesort.txt", copiedList);
         break;
       case Option::InsertionSortC:
-        insertionSort(copiedList.data(), copiedList.size());
+        c_insertionsort_time = benchmarkAlgo(insertionSort, copiedList.data(), copiedList.size());
         saveList("c_insertionsort.txt", copiedList);
         break;
       case Option::InsertionSortAsm:
-        insertion_sort(copiedList.data(), copiedList.size());
+        a_insertionsort_time = benchmarkAlgo(insertion_sort, copiedList.data(), copiedList.size());
         saveList("a_insertionsort.txt", copiedList);
         break;
       case Option::Quit:
@@ -78,7 +93,7 @@ int main() {
         break;
     }
 
-    std::cout << "\n\n\n";
+    system("clear");
   } while (option != Option::Quit);
 
   return 0;

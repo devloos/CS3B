@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <exception>
+#include <chrono>
 
 typedef long long quad;
 
