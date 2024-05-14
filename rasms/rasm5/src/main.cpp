@@ -93,7 +93,7 @@ int main() {
         break;
     }
 
-    system("clear");
+    int val = system("clear");
   } while (option != Option::Quit);
 
   return 0;
