@@ -1,6 +1,6 @@
 #include "../include/main.h"
 
-void saveList(const std::string &fileName, std::vector<quad> &list) {
+void saveList(const std::string &fileName, NotSTL::Vector<quad> &list) {
   std::ofstream outFile(fileName);
 
   for (auto num : list) {
@@ -10,7 +10,7 @@ void saveList(const std::string &fileName, std::vector<quad> &list) {
   outFile.close();
 }
 
-void readList(const std::string &fileName, std::vector<quad> &list) {
+void readList(const std::string &fileName, NotSTL::Vector<quad> &list) {
   std::ifstream inFile(fileName);
 
   while (!inFile.eof()) {
@@ -43,7 +43,7 @@ int benchmarkAlgo(void (*func) (quad arr[], int len), quad arr[], int len) {
 }
 
 int main() {
-  std::vector<quad> list;
+  NotSTL::Vector<quad> list;
 
   Option option;
   int c_bubblesort_time = 0;
@@ -64,7 +64,7 @@ int main() {
 
     printMenu();
 
-    std::vector<quad> copiedList = list;
+    NotSTL::Vector<quad> copiedList = list;
 
     option = getInput("Enter option: ");
 
@@ -93,7 +93,7 @@ int main() {
         break;
     }
 
-    int val = system("clear");
+    std::cout << "\n";
   } while (option != Option::Quit);
 
   return 0;
